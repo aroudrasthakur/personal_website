@@ -11,31 +11,119 @@ export default function About() {
 
           <div style={{ maxWidth: 900, margin: '0 auto', color: 'var(--text-secondary)' }}>
             <p style={{ marginBottom: '1rem', fontSize: '1.05rem' }}>
-              I'm Aroudra Thakur — a Full Stack and AI/ML Software Engineer passionate about building reliable,
-              scalable, and user-centered products. My background blends web engineering, computer vision,
-              and cloud-native architecture. I enjoy designing clean APIs, optimizing performance, and applying
-              ML where it can deliver real user value.
+              I'm Aroudra Thakur — a Computer Science student at The University of Texas at Arlington with a passion for 
+              Full Stack Development and AI/ML. I specialize in building scalable web applications, developing intelligent 
+              systems using computer vision and deep learning, and creating user-centered products that solve real-world problems.
             </p>
+
+            <h3 style={{ color: 'var(--accent)', marginTop: '2rem', marginBottom: '1rem' }}>Technical Skills</h3>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>Languages</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['Python', 'JavaScript', 'TypeScript', 'Java', 'C', 'PHP', 'HTML/CSS'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>Frontend</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['React', 'React Native', 'Next.js', 'Vue.js', 'Expo', 'jQuery'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>Backend & Databases</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['Node.js', 'Django', 'Flask', 'PostgreSQL', 'MySQL', 'REST APIs', 'GraphQL'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>AI/ML & Computer Vision</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['TensorFlow', 'PyTorch', 'Keras', 'OpenCV', 'Mediapipe', 'CNNs', 'GCNs', 'Transformers', 'NLP', 'DTW'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>Cloud & DevOps</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['AWS', 'Docker', 'Git', 'GitHub Actions', 'Apache'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.5rem', fontSize: '1rem' }}>Other</h4>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {['Raspberry Pi', 'Embedded Systems', 'IoT', 'Event-Based Vision', 'Agile', 'WordPress'].map(skill => (
+                  <span key={skill} style={{ 
+                    padding: '0.4rem 0.8rem', 
+                    backgroundColor: 'var(--card-bg)', 
+                    borderRadius: '4px',
+                    fontSize: '0.9rem',
+                    border: '1px solid var(--border-color)'
+                  }}>{skill}</span>
+                ))}
+              </div>
+            </div>
 
             <h3 style={{ color: 'var(--accent)', marginTop: '1.5rem' }}>What I work on</h3>
             <p style={{ marginBottom: '1rem' }}>
-              - Front-end engineering: React, Vue, responsive design, accessibility and performance tuning.<br/>
-              - Back-end systems: Node.js, Python, REST/GraphQL APIs, and relational / document databases.<br/>
-              - Machine learning & computer vision: prototyping, model deployment, and integrating ML inference into apps.<br/>
-              - Cloud & DevOps: containerization (Docker), CI/CD (GitHub Actions), and AWS deployments.
-            </p>
-
-            <h3 style={{ color: 'var(--accent)', marginTop: '1.5rem' }}>Approach & values</h3>
-            <p style={{ marginBottom: '1rem' }}>
-              I value clear communication, testable code, and incremental delivery. I enjoy mentoring and knowledge-sharing,
-              and I try to keep accessibility and performance top-of-mind while shipping user-facing features.
+              - Full-stack web applications with modern frameworks and responsive design<br/>
+              - AI/ML systems for computer vision, pose estimation, and natural language processing<br/>
+              - Research in human pose estimation, ASL recognition, and event-based vision<br/>
+              - Mobile applications with React Native and cross-platform development<br/>
+              - Cloud infrastructure, automation, and performance optimization
             </p>
 
             <h3 style={{ color: 'var(--accent)', marginTop: '1.5rem' }}>Highlights</h3>
             <ul style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>
-              <li>Led development of a multi-tenant SaaS dashboard used by enterprise customers.</li>
-              <li>Built a real-time computer vision prototype for object detection and analytics.</li>
-              <li>Automated testing + CI/CD pipelines to improve release confidence and reduce manual work.</li>
+              <li>Developed scalable SaaS modules at TopSource Worldwide and Hotspring, optimizing APIs and UI performance</li>
+              <li>Published research in IEEE Access on human pose estimation using deep learning</li>
+              <li>Built LangPal, a full-featured language learning platform with real-time chat and partner matching</li>
+              <li>Created AI-powered applications for fitness form correction, slang detection, and autonomous driving</li>
+              <li>Leading development of MavsPrep as ACM Create Member, providing academic resources to UTA students</li>
             </ul>
 
             <div style={{ marginTop: '1.5rem' }}>
