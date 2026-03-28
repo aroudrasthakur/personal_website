@@ -203,7 +203,7 @@ a { text-decoration: none; color: inherit; }
 /* ===== Tech Tag ===== */
 .tech-tag {
   display: inline-flex;
-  alignitems: center;
+  align-items: center;
   padding: 0.3rem 0.75rem;
   background: rgba(255, 255, 255, 0.04);
   border-radius: 6px;
