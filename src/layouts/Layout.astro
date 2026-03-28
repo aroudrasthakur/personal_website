@@ -1,0 +1,372 @@
+---
+import '@/styles/globals.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Aroudra Thakur — Software Engineer & AI/ML Researcher',
+  description = 'Full Stack and AI/ML Software Engineer specializing in computer vision, deep learning, and scalable web applications.',
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="author" content="Aroudra Thakur" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav id="main-nav">
+      <div class="nav-inner section-container">
+        <a href="/" class="nav-logo" aria-label="Home - Aroudra Thakur">
+          <span class="gradient-text">Aroudra</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <ul class="nav-links" id="nav-links-desktop">
+          <li><a href="/" class:list={[{ active: currentPath === '/' }]}>Home</a></li>
+          <li><a href="/about" class:list={[{ active: currentPath === '/about' }]}>About</a></li>
+          <li><a href="/experiences" class:list={[{ active: currentPath === '/experiences' }]}>Experience</a></li>
+          <li><a href="/projects" class:list={[{ active: currentPath === '/projects' }]}>Projects</a></li>
+          <li><a href="/contact" class:list={[{ active: currentPath === '/contact' }]}>Contact</a></li>
+        </ul>
+
+        <!-- Mobile menu button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+
+      <!-- Mobile Nav Overlay -->
+      <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+        <ul class="mobile-nav-links">
+          <li><a href="/" class:list={[{ active: currentPath === '/' }]}>Home</a></li>
+          <li><a href="/about" class:list={[{ active: currentPath === '/about' }]}>About</a></li>
+          <li><a href="/experiences" class:list={[{ active: currentPath === '/experiences' }]}>Experience</a></li>
+          <li><a href="/projects" class:list={[{ active: currentPath === '/projects' }]}>Projects</a></li>
+          <li><a href="/contact" class:list={[{ active: currentPath === '/contact' }]}>Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="section-container footer-inner">
+        <div class="footer-brand">
+          <span class="gradient-text footer-logo">Aroudra</span>
+          <p>Building the future with code & AI.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/aroudrasthakur" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/aroudra-thakur-69203630a/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:aroudra.thakur@gmail.com">Email</a>
+        </div>
+        <p class="footer-copy">&copy; {new Date().getFullYear()} Aroudra Thakur. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Mobile menu script -->
+    <script>
+      const btn = document.getElementById('mobile-menu-btn');
+      const overlay = document.getElementById('mobile-nav-overlay');
+      const nav = document.getElementById('main-nav');
+
+      btn?.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.classList.toggle('open');
+        overlay?.classList.toggle('open');
+
+        if (!expanded) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Close on link click
+      overlay?.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          btn?.setAttribute('aria-expanded', 'false');
+          btn?.classList.remove('open');
+          overlay.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Navbar scroll effect
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        if (scrollY > 50) {
+          nav?.classList.add('scrolled');
+        } else {
+          nav?.classList.remove('scrolled');
+        }
+        lastScroll = scrollY;
+      }, { passive: true });
+    </script>
+
+    <!-- GSAP ScrollTrigger for section reveals -->
+    <script>
+      import gsap from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Check for reduced motion preference
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!prefersReducedMotion) {
+        // Reveal all sections with .section-reveal class
+        gsap.utils.toArray('.section-reveal').forEach((el: any) => {
+          gsap.to(el, {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+            },
+          });
+        });
+
+        // Stagger cards in grid layouts
+        gsap.utils.toArray('.stagger-grid').forEach((container: any) => {
+          const cards = container.querySelectorAll('.stagger-item');
+          gsap.from(cards, {
+            opacity: 0,
+            y: 30,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 80%',
+              toggleActions: 'play none none none',
+            },
+          });
+        });
+      } else {
+        // Ensure sections are visible even without animation
+        document.querySelectorAll('.section-reveal').forEach(el => {
+          (el as HTMLElement).style.opacity = '1';
+          (el as HTMLElement).style.transform = 'none';
+        });
+      }
+    </script>
+
+    <style>
+      /* ===== Navigation ===== */
+      #main-nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 1.25rem 0;
+        transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        background: transparent;
+      }
+
+      #main-nav.scrolled {
+        background: rgba(10, 10, 10, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 0.85rem 0;
+      }
+
+      .nav-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2.25rem;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.25s ease;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--accent);
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      /* Mobile Menu Button */
+      .mobile-menu-btn {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 1001;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--text-primary);
+        transition: all 0.3s ease;
+        border-radius: 1px;
+      }
+
+      .mobile-menu-btn.open span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .mobile-menu-btn.open span:nth-child(2) { opacity: 0; }
+      .mobile-menu-btn.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      /* Mobile Overlay */
+      .mobile-nav-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+
+      .mobile-nav-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .mobile-nav-links {
+        list-style: none;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .mobile-nav-links a {
+        font-family: 'Outfit', sans-serif;
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        transition: color 0.3s ease;
+      }
+
+      .mobile-nav-links a:hover,
+      .mobile-nav-links a.active {
+        color: var(--accent);
+      }
+
+      @media (max-width: 768px) {
+        .nav-links { display: none; }
+        .mobile-menu-btn { display: flex; }
+      }
+
+      /* ===== Footer ===== */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 3rem 0;
+        margin-top: 2rem;
+      }
+
+      .footer-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+      }
+
+      .footer-brand p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+      }
+
+      .footer-links a {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.25s ease;
+      }
+
+      .footer-links a:hover { color: var(--accent); }
+
+      .footer-copy {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        opacity: 0.6;
+      }
+    </style>
+  </body>
+</html>

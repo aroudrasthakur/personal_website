@@ -1,0 +1,150 @@
+---
+import Layout from '@/layouts/Layout.astro';
+---
+
+<Layout title="Contact — Aroudra Thakur" description="Get in touch with Aroudra Thakur for projects, collaborations, or opportunities.">
+  <section class="section-reveal page-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h1>Contact</h1>
+        <p>I'd love to hear about your project or opportunity. Here are the best ways to reach me.</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Email -->
+        <div class="glass-card contact-item">
+          <div class="contact-icon">📧</div>
+          <h3>Email</h3>
+          <p class="contact-value">aroudra.thakur@gmail.com</p>
+          <div class="contact-actions">
+            <a href="mailto:aroudra.thakur@gmail.com" class="glow-button btn-sm">Send Email</a>
+            <button class="outline-button btn-sm copy-btn" data-copy="aroudra.thakur@gmail.com">Copy</button>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="glass-card contact-item">
+          <div class="contact-icon">📞</div>
+          <h3>Phone</h3>
+          <p class="contact-value">+1 682 406 7019</p>
+          <div class="contact-actions">
+            <a href="tel:+16824067019" class="glow-button btn-sm">Call Now</a>
+            <button class="outline-button btn-sm copy-btn" data-copy="+1 682 406 7019">Copy</button>
+          </div>
+        </div>
+
+        <!-- GitHub -->
+        <a href="https://github.com/aroudrasthakur" target="_blank" rel="noreferrer" class="glass-card contact-item contact-item-link">
+          <div class="contact-icon">💻</div>
+          <h3>GitHub</h3>
+          <p class="contact-value">aroudrasthakur</p>
+          <span class="contact-arrow">→</span>
+        </a>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/aroudra-thakur-69203630a/" target="_blank" rel="noreferrer" class="glass-card contact-item contact-item-link">
+          <div class="contact-icon">💼</div>
+          <h3>LinkedIn</h3>
+          <p class="contact-value">Aroudra Thakur</p>
+          <span class="contact-arrow">→</span>
+        </a>
+      </div>
+
+      <div class="back-link">
+        <a href="/" class="outline-button">← Back to Home</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = (btn as HTMLElement).dataset.copy;
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = original; }, 1500);
+      });
+    });
+  });
+</script>
+
+<style>
+  .page-section {
+    padding: 10rem 0 4rem;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .contact-item {
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .contact-item-link {
+    cursor: pointer;
+    position: relative;
+  }
+
+  .contact-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-item h3 {
+    font-size: 1rem;
+    color: var(--text-primary);
+  }
+
+  .contact-value {
+    color: var(--accent);
+    font-family: 'Inter', monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    word-break: break-all;
+  }
+
+  .contact-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .contact-arrow {
+    color: var(--accent);
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    transition: transform 0.3s ease;
+  }
+
+  .contact-item-link:hover .contact-arrow {
+    transform: translateX(4px);
+  }
+
+  .back-link {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .page-section { padding: 8rem 0 3rem; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>

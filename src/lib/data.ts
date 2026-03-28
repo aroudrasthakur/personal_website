@@ -1,4 +1,27 @@
-export const experiences = [
+export interface Experience {
+  id: number;
+  title: string;
+  company: string;
+  startDate: string;
+  endDate: string | null;
+  description: string;
+  technologies: string[];
+  priority: number;
+}
+
+export interface Project {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  tags: string[];
+  stars: number;
+  github: string;
+  demo: string | null;
+  priority: number;
+}
+
+export const experiences: Experience[] = [
   { id: 1, title: "Software Engineer Intern", company: "Hotspring", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "AWS", "Docker"], priority: 5 },
   { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], priority: 5 },
   { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], priority: 3 },
@@ -11,7 +34,7 @@ export const experiences = [
   { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", startDate: "2026-1", endDate: null, description: "To be added", technologies: ["To be added"], priority: 4 },
 ];
 
-export const projects = [
+export const projects: Project[] = [
   { id: 1, title: "UTA Lost & Found", description: "Comprehensive Android app for the UTA campus community with authentication, item reporting, smart search, auto-matching, push notifications, and admin dashboard. Built with Material 3 design.", icon: "📱", tags: ["Kotlin", "Jetpack Compose", "Firebase", "Android"], stars: 0, github: "https://github.com/aroudrasthakur/lostandfound", demo: "https://youtu.be/arhO11kpSTY", priority: 9 },
   { id: 2, title: "MavPrep", description: "All in one UTA focused study platform with real time chat, voice and video calls, secure login, course based channels, and smart exam prep tools designed to help Mavericks collaborate and succeed academically.", icon: "📚", tags: ["Next.js", "React", "TypeScript", "Tailwind CSS", "AWS", "WebRTC", "Socket.IO"], stars: 0, github: "https://github.com/aroudrasthakur/Cloud_Migration", demo: "https://main.d3hckg0mxkbe7d.amplifyapp.com/", priority: 11 },
   { id: 3, title: "LangPal", description: "Language learning partner app connecting users with language exchange partners worldwide. Features real-time chat, partner discovery, safety features, and dark mode support.", icon: "🌍", tags: ["React Native", "TypeScript", "Expo", "AsyncStorage"], stars: 0, github: "https://github.com/aroudrasthakur/LangPal-Prototype", demo: null, priority: 10 },
@@ -26,13 +49,26 @@ export const projects = [
   { id: 12, title: "Bod-Fix", description: "A fitness application that provides the user with a form correction tool to allow the users to perform exercises with the correct form using pose estimation techniques.", icon: "🏋️‍♂️", tags: ["Python", "OpenCV", "Mediapipe", "Flask"], stars: 0, github: "", demo: null, priority: 8 },
   { id: 13, title: "PiSense", description: "Modular backend for running, evaluating, and improving conversational agents with retrieval and safety controls. Includes FastAPI routes for chat/eval/admin, an in-memory RAG prototype with optional OpenAI or local Hugging Face fallbacks, and Alembic migrations for persistence.", icon: "🤖", tags: ["Python", "FastAPI", "RAG", "SQLAlchemy", "HuggingFace"], stars: 0, github: "https://github.com/aroudrasthakur/PiSense", demo: null, priority: 12 },
   { id: 14, title: "AEDAT Stream Viewer", description: "Web app for side-by-side visualization of AEDAT4 event streams and RGB frames. Backend (FastAPI) parses AEDAT files, serves synchronized event windows and frames; frontend (vanilla JS + canvas) renders low-latency event visualization with playback and scrub controls.", icon: "📹", tags: ["Python", "FastAPI", "JavaScript", "AEDAT", "Visualization"], stars: 0, github: "https://github.com/aroudrasthakur/AEDAT_video_tool", demo: null, priority: 11 },
-  { id: 15, title: "Slackbot", description: "Built a production-grade Slackbot and realtime Next.js dashboard for Forward-Deployed Engineers that classifies Slack messages with OpenAI and groups them into actionable tickets using vector similarity and strict guardrails. Designed for reliability and scale with sequential message processing, cross-channel context retrieval, and live ticket updates via Socket.IO.", icon: "🏢", tags: ["Slackbot", "Realtime Systems", "LLMs", "Semantic Search", "Next.js", "Node.js", "Socket.IO"], stars: 0, github: "https://github.com/aroudrasthakur/nixo-slackbot", demo: "https://youtu.be/Pks6yqSAxU8", priority: 13 }
+  { id: 15, title: "Slackbot", description: "Built a production-grade Slackbot and realtime Next.js dashboard for Forward-Deployed Engineers that classifies Slack messages with OpenAI and groups them into actionable tickets using vector similarity and strict guardrails. Designed for reliability and scale with sequential message processing, cross-channel context retrieval, and live ticket updates via Socket.IO.", icon: "🏢", tags: ["Slackbot", "Realtime Systems", "LLMs", "Semantic Search", "Next.js", "Node.js", "Socket.IO"], stars: 0, github: "https://github.com/aroudrasthakur/nixo-slackbot", demo: "https://youtu.be/Pks6yqSAxU8", priority: 13 },
 ];
 
-
-export function formatDate(dateStr) {
+export function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'Present';
   const [y, m] = dateStr.split('-');
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return `${months[parseInt(m) - 1]} ${y}`;
+}
+
+export function sortExperiencesByPriority(exps: Experience[]): Experience[] {
+  return [...exps].sort((a, b) => {
+    if ((b.priority || 0) !== (a.priority || 0)) return (b.priority || 0) - (a.priority || 0);
+    return (b.endDate || '9999-99').localeCompare(a.endDate || '9999-99');
+  });
+}
+
+export function sortProjectsByPriority(projs: Project[]): Project[] {
+  return [...projs].sort((a, b) => {
+    if ((b.priority || 0) !== (a.priority || 0)) return (b.priority || 0) - (a.priority || 0);
+    return b.stars - a.stars;
+  });
 }

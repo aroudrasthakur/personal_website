@@ -1,0 +1,38 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ProjectGrid from '@/components/ProjectGrid';
+import { projects, sortProjectsByPriority } from '@/lib/data';
+
+const sorted = sortProjectsByPriority(projects);
+---
+
+<Layout title="Projects — Aroudra Thakur" description="Aroudra Thakur's portfolio of software projects spanning full-stack development, AI/ML, mobile apps, and research.">
+  <section class="section-reveal page-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h1>All Projects</h1>
+        <p>Everything I've built, from research tools to production apps</p>
+      </div>
+
+      <ProjectGrid items={sorted} client:visible />
+
+      <div class="back-link">
+        <a href="/" class="outline-button">← Back to Home</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-section {
+    padding: 10rem 0 4rem;
+  }
+
+  .back-link {
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .page-section { padding: 8rem 0 3rem; }
+  }
+</style>

@@ -1,0 +1,387 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ThreeHero from '@/components/ThreeHero';
+import SkillTags from '@/components/SkillTags';
+import ExperienceCarousel from '@/components/ExperienceCarousel';
+import ProjectCarousel from '@/components/ProjectCarousel';
+import EmailPopup from '@/components/EmailPopup';
+import {
+  experiences,
+  projects,
+  sortExperiencesByPriority,
+  sortProjectsByPriority,
+} from '@/lib/data';
+
+const topExperiences = sortExperiencesByPriority(experiences).slice(0, 4);
+const topProjects = sortProjectsByPriority(projects).slice(0, 4);
+
+const skills = [
+  'Python', 'Java', 'C/C++', 'TypeScript/JavaScript', 'TensorFlow',
+  'PyTorch', 'OpenCV', 'Django', 'React', 'AWS', 'Docker',
+  'CI/CD', 'Linux', 'PostgreSQL', 'MongoDB', 'Git',
+  'REST/GraphQL', 'Agile Development', 'Data Visualization',
+];
+---
+
+<Layout>
+  <!-- ===== HERO ===== -->
+  <section id="hero" class="hero-section">
+    <ThreeHero client:load />
+    <div class="hero-overlay">
+      <div class="section-container hero-content">
+        <p class="hero-greeting">Hello, I'm</p>
+        <h1 class="hero-name gradient-text">Aroudra Thakur</h1>
+        <p class="hero-subtitle">Full Stack & AI/ML Software Engineer</p>
+        <p class="hero-sub2">Computer Vision Enthusiast · Researcher · Builder</p>
+        <div class="hero-actions">
+          <a href="/contact" class="glow-button">Get In Touch</a>
+          <a href="/projects" class="outline-button">View Projects</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator" aria-hidden="true">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="section-reveal about-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>About Me</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-visual">
+          <div class="about-avatar">
+            <span>👨‍💻</span>
+          </div>
+          <div class="about-stats">
+            <div class="stat-item">
+              <span class="stat-number gradient-text">10+</span>
+              <span class="stat-label">Experiences</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number gradient-text">15+</span>
+              <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number gradient-text">1</span>
+              <span class="stat-label">IEEE Paper</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-text">
+          <p>
+            Hey! I am an Honors Computer Science student at UT Arlington researching AI, Computer Vision, and Full-Stack Systems Engineering. My work spans event-based vision, pose estimation, and AI accessibility, using tools like TensorFlow, PyTorch, React, and AWS.
+          </p>
+          <p>
+            I've contributed to research under multiple professors, developed deep learning models for real-time vision tasks, and led peer mentoring in Data Structures and Algorithms. Passionate about human-centered AI, I aim to build technologies that advance accessibility, innovation, and impact.
+          </p>
+          <div class="about-skills">
+            <h3>Technologies</h3>
+            <SkillTags skills={skills} client:visible />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <section id="experience" class="section-reveal">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Experience</h2>
+        <p>Where I've been making an impact</p>
+      </div>
+      <ExperienceCarousel items={topExperiences} client:visible />
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section id="projects" class="section-reveal">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Featured Projects</h2>
+        <p>Things I've built and shipped</p>
+      </div>
+      <ProjectCarousel items={topProjects} client:visible />
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="section-reveal contact-section">
+    <div class="section-container">
+      <div class="section-header">
+        <h2>Get In Touch</h2>
+        <p>I'm always open to discussing new projects, creative ideas, or opportunities</p>
+      </div>
+      <div class="contact-cards">
+        <EmailPopup client:load />
+        <a
+          href="https://github.com/aroudrasthakur"
+          class="contact-card-link"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="contact-card-icon">💻</span>
+          <span>GitHub</span>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/aroudra-thakur-69203630a/"
+          class="contact-card-link"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span class="contact-card-icon">💼</span>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GSAP Hero Timeline ===== -->
+  <script>
+    import gsap from 'gsap';
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from('.hero-greeting', { opacity: 0, y: 30, duration: 0.7, delay: 0.3 })
+        .from('.hero-name', { opacity: 0, y: 40, duration: 0.8 }, '-=0.3')
+        .from('.hero-subtitle', { opacity: 0, y: 25, duration: 0.6 }, '-=0.3')
+        .from('.hero-sub2', { opacity: 0, y: 20, duration: 0.5 }, '-=0.2')
+        .from('.hero-actions', { opacity: 0, y: 20, duration: 0.5 }, '-=0.2')
+        .from('.hero-scroll-indicator', { opacity: 0, duration: 0.8 }, '-=0.2');
+    }
+  </script>
+</Layout>
+
+<style>
+  /* ===== Hero ===== */
+  .hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero-overlay {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero-greeting {
+    font-size: 1.1rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+  }
+
+  .hero-sub2 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(180deg, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ===== About ===== */
+  .about-section {
+    background: var(--bg-secondary);
+    padding: 6rem 0;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .about-avatar {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 300px;
+    background: linear-gradient(135deg, var(--accent-dim), rgba(0, 204, 255, 0.08));
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    border: 1px solid var(--border);
+    margin: 0 auto;
+  }
+
+  .about-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .about-text p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+  }
+
+  .about-skills {
+    margin-top: 2rem;
+  }
+
+  .about-skills h3 {
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  /* ===== Sections ===== */
+  #experience {
+    padding: 6rem 0;
+  }
+
+  #projects {
+    padding: 6rem 0;
+    background: var(--bg-secondary);
+  }
+
+  /* ===== Contact ===== */
+  .contact-section {
+    padding: 6rem 0;
+  }
+
+  .contact-cards {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .contact-card-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.75rem;
+    background: linear-gradient(135deg, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0.6));
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .contact-card-link:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.08);
+  }
+
+  .contact-card-icon {
+    font-size: 1.25rem;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .about-avatar {
+      max-width: 200px;
+    }
+
+    .hero-name {
+      font-size: 2.5rem;
+    }
+
+    #experience, #projects, .contact-section, .about-section {
+      padding: 4rem 0;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-line { animation: none; opacity: 0.5; }
+  }
+</style>
