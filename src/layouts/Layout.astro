@@ -33,7 +33,7 @@ const {
   </head>
   <body>
     <div class="site-canvas" aria-hidden="true">
-      <ThreeHero client:load />
+      <ThreeHero client:idle />
     </div>
 
     <div class="star-cursor" id="star-cursor" aria-hidden="true">
@@ -156,68 +156,27 @@ const {
         document.documentElement.style.setProperty('cursor', 'none', 'important');
         document.body.style.setProperty('cursor', 'none', 'important');
 
-        let currentX = -120;
-        let currentY = -120;
-        let targetX = -120;
-        let targetY = -120;
-        let frame = 0;
-
         const interactiveSelector = 'a, button, [role="button"], summary, input, textarea, select, label';
-
-        const applyCursorOverride = (element: Element | null) => {
-          if (!(element instanceof HTMLElement)) return;
-          element.style.setProperty('cursor', 'none', 'important');
-        };
-
-        const renderCursor = () => {
-          const ease = reduceCursorMotion ? 1 : 0.24;
-          currentX += (targetX - currentX) * ease;
-          currentY += (targetY - currentY) * ease;
-
-          cursor.style.setProperty('--cursor-x', `${currentX}px`);
-          cursor.style.setProperty('--cursor-y', `${currentY}px`);
-
-          if (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1) {
-            frame = window.requestAnimationFrame(renderCursor);
-          } else {
-            frame = 0;
-          }
+        const setCursorPosition = (x: number, y: number) => {
+          cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(var(--cursor-scale))`;
         };
 
         const showCursor = (event: PointerEvent) => {
           if (event.pointerType && event.pointerType !== 'mouse') return;
 
-          targetX = event.clientX;
-          targetY = event.clientY;
+          setCursorPosition(event.clientX, event.clientY);
           cursor.classList.add('visible');
-
-          if (!frame) {
-            frame = window.requestAnimationFrame(renderCursor);
-          }
         };
 
         const updateCursorState = (event: Event) => {
           const target = event.target as Element | null;
           const interactiveTarget = target?.closest(interactiveSelector) ?? null;
           cursor.classList.toggle('interactive', Boolean(interactiveTarget));
-
-          if (target) {
-            applyCursorOverride(target);
-          }
-
-          if (interactiveTarget) {
-            applyCursorOverride(interactiveTarget);
-          }
         };
 
         const hideCursor = () => {
           cursor.classList.remove('visible', 'pressed', 'interactive');
-          targetX = -120;
-          targetY = -120;
-          currentX = -120;
-          currentY = -120;
-          cursor.style.setProperty('--cursor-x', `${currentX}px`);
-          cursor.style.setProperty('--cursor-y', `${currentY}px`);
+          setCursorPosition(-120, -120);
         };
 
         window.addEventListener('pointermove', showCursor, { passive: true });
@@ -294,8 +253,6 @@ const {
       }
 
       .star-cursor {
-        --cursor-x: -120px;
-        --cursor-y: -120px;
         --cursor-scale: 1;
         position: fixed;
         top: 0;
@@ -305,9 +262,11 @@ const {
         z-index: 5000;
         pointer-events: none;
         opacity: 0;
-        transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-50%, -50%) scale(var(--cursor-scale));
-        transition: opacity 0.2s ease, filter 0.2s ease;
+        transform: translate3d(-120px, -120px, 0) translate(-50%, -50%) scale(var(--cursor-scale));
+        transition: opacity 0.14s ease, filter 0.14s ease;
         filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.28)) drop-shadow(0 0 20px rgba(0, 204, 255, 0.2));
+        will-change: transform, opacity, filter;
+        contain: layout style paint;
       }
 
       .star-cursor.visible {
@@ -382,7 +341,7 @@ const {
         );
         background: radial-gradient(circle, rgba(255, 247, 199, 0.95), rgba(144, 255, 209, 0.7) 45%, rgba(65, 222, 255, 0.18) 100%);
         transform: scale(0.55) rotate(-8deg);
-        transition: opacity 0.18s ease, transform 0.22s ease;
+        transition: opacity 0.14s ease, transform 0.16s ease;
       }
 
       .star-cursor-core {
@@ -390,7 +349,7 @@ const {
         clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
         background: radial-gradient(circle at 38% 34%, #fff7c7 0%, #90ffd1 34%, #41deff 68%, rgba(65, 222, 255, 0.34) 100%);
         transform: rotate(45deg);
-        transition: clip-path 0.18s ease, inset 0.18s ease, transform 0.18s ease, background 0.18s ease;
+        transition: clip-path 0.14s ease, inset 0.14s ease, transform 0.14s ease, background 0.14s ease;
       }
 
       .star-cursor-ring {
@@ -398,7 +357,7 @@ const {
         border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.16);
-        transition: inset 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        transition: inset 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
       }
 
       .star-cursor.interactive .star-cursor-burst {

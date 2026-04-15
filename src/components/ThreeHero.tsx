@@ -18,19 +18,20 @@ export default function ThreeHero() {
     const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
     camera.position.z = 30;
 
+    const isMobile = window.innerWidth < 768;
+
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: false,
       powerPreference: 'high-performance',
     });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.25));
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Particles
-    const isMobile = window.innerWidth < 768;
-    const particleCount = isMobile ? 360 : 700;
+    const particleCount = isMobile ? 180 : 360;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const velocities = new Float32Array(particleCount * 3);
@@ -107,11 +108,12 @@ export default function ThreeHero() {
     scene.add(particles);
     // Mouse tracking
     const mouse = { x: 0, y: 0 };
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: PointerEvent) => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('pointermove', handleMouseMove, { passive: true });
 
     // Resize
     const handleResize = () => {
@@ -119,13 +121,23 @@ export default function ThreeHero() {
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1 : 1.25));
     };
     window.addEventListener('resize', handleResize);
 
     // Animation loop
     let time = 0;
+    let isPageVisible = document.visibilityState === 'visible';
+
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === 'visible';
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const animate = () => {
       frameRef.current = requestAnimationFrame(animate);
+      if (!isPageVisible) return;
+
       time += prefersReduced ? 0.002 : 0.008;
       material.uniforms.uTime.value = time;
 
@@ -141,8 +153,9 @@ export default function ThreeHero() {
 
     return () => {
       cancelAnimationFrame(frameRef.current);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       renderer.dispose();
       geometry.dispose();
       material.dispose();
