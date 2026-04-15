@@ -1,0 +1,115 @@
+---
+interface SkillTickerItem {
+  label: string;
+  signal: string;
+}
+
+interface Props {
+  items: SkillTickerItem[];
+}
+
+const { items } = Astro.props;
+const repeatedItems = [...items, ...items];
+---
+
+<div class="skills-ticker-shell" aria-label="Skills ticker">
+  <div class="ticker-header">
+    <span class="ticker-badge">LIVE</span>
+    <span class="ticker-title">Skills Exchange</span>
+  </div>
+
+  <div class="ticker-track-wrap">
+    <div class="ticker-track">
+      {repeatedItems.map((item, index) => (
+        <div class="ticker-item" aria-hidden={index >= items.length}>
+          <span class="ticker-symbol">{item.label}</span>
+          <span class="ticker-signal">{item.signal}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .skills-ticker-shell {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+      linear-gradient(90deg, rgba(0, 255, 136, 0.08), transparent 18%, transparent 82%, rgba(0, 204, 255, 0.08)),
+      rgba(5, 8, 7, 0.94);
+    overflow: hidden;
+  }
+
+  .ticker-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+  }
+
+  .ticker-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.18rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(0, 255, 136, 0.14);
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .ticker-track-wrap {
+    overflow: hidden;
+    padding: 0.55rem 0 0.85rem;
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: tickerRoll 30s linear infinite;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0 1.5rem;
+    white-space: nowrap;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .ticker-item::after {
+    content: '';
+    width: 22px;
+    height: 1px;
+    margin-left: 1.4rem;
+    background: linear-gradient(90deg, rgba(0, 255, 136, 0.55), rgba(0, 204, 255, 0.2));
+  }
+
+  .ticker-symbol {
+    font-size: 0.94rem;
+    letter-spacing: 0.1em;
+    color: var(--text-primary);
+  }
+
+  .ticker-signal {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+
+  @keyframes tickerRoll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+    }
+  }
+</style>

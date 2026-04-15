@@ -6,6 +6,7 @@ export interface Experience {
   endDate: string | null;
   description: string;
   technologies: string[];
+  logoPath?: string;
   priority: number;
 }
 
@@ -22,16 +23,16 @@ export interface Project {
 }
 
 export const experiences: Experience[] = [
-  { id: 1, title: "Software Engineer Intern", company: "Hotspring", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "AWS", "Docker"], priority: 5 },
-  { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], priority: 5 },
-  { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], priority: 3 },
-  { id: 4, title: "Research Assistant - Human Pose Estimation and AI Systems", company: "The University of Texas at Arlington", startDate: "2024-10", endDate: "2025-10", description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.", technologies: ["Python", "JavaScript", "REST APIs"], priority: 3 },
-  { id: 5, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", startDate: "2025-01", endDate: null, description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], priority: 2 },
-  { id: 6, title: "Undergraduate Research Assistant", company: "Primal Lab (UTA)", startDate: "2025-05", endDate: null, description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.", technologies: ["Event Vision", "PyTorch"], priority: 4 },
-  { id: 7, title: "APSI Student Assistant", company: "Honor's College (UTA)", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], priority: 1 },
-  { id: 8, title: "ACM Create Member", company: "ACM (UTA)", startDate: "2025-09", endDate: null, description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"], priority: 3 },
-  { id: 9, title: "AI Native Software Engineer Intern", company: "Ozcorp Scientific LLC", startDate: "2025-12", endDate: null, description: "To be added", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], priority: 6 },
-  { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", startDate: "2026-1", endDate: null, description: "To be added", technologies: ["To be added"], priority: 4 },
+  { id: 1, title: "Software Engineer Intern", company: "Hotspring", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "AWS", "Docker"], logoPath: "/logo/hotspring_logo.jpg", priority: 5 },
+  { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], logoPath: "/logo/topsource_worldwide_logo.jpg", priority: 5 },
+  { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3 },
+  { id: 4, title: "Research Assistant - Human Pose Estimation and AI Systems", company: "The University of Texas at Arlington", startDate: "2024-10", endDate: "2025-10", description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.", technologies: ["Python", "JavaScript", "REST APIs"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3 },
+  { id: 5, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", startDate: "2025-01", endDate: null, description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2 },
+  { id: 6, title: "Undergraduate Research Assistant", company: "Primal Lab (UTA)", startDate: "2025-05", endDate: null, description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.", technologies: ["Event Vision", "PyTorch"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 4 },
+  { id: 7, title: "APSI Student Assistant", company: "Honor's College (UTA)", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1 },
+  { id: 8, title: "ACM Create Member", company: "ACM (UTA)", startDate: "2025-09", endDate: null, description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3 },
+  { id: 9, title: "AI Native Software Engineer Intern", company: "Ozcorp Scientific LLC", startDate: "2025-12", endDate: null, description: "To be added", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6 },
+  { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", startDate: "2026-1", endDate: null, description: "To be added", technologies: ["To be added"], logoPath: "/logo/acmuta_logo.jpg", priority: 4 },
 ];
 
 export const projects: Project[] = [
@@ -63,6 +64,29 @@ export function sortExperiencesByPriority(exps: Experience[]): Experience[] {
   return [...exps].sort((a, b) => {
     if ((b.priority || 0) !== (a.priority || 0)) return (b.priority || 0) - (a.priority || 0);
     return (b.endDate || '9999-99').localeCompare(a.endDate || '9999-99');
+  });
+}
+
+function toSortableMonth(dateStr: string | null): number {
+  if (!dateStr) return Number.MAX_SAFE_INTEGER;
+
+  const [yearPart, monthPart = '1'] = dateStr.split('-');
+  const year = Number.parseInt(yearPart, 10);
+  const month = Number.parseInt(monthPart, 10);
+
+  if (Number.isNaN(year) || Number.isNaN(month)) return 0;
+  return year * 100 + month;
+}
+
+export function sortExperiencesByNewest(exps: Experience[]): Experience[] {
+  return [...exps].sort((a, b) => {
+    const endDiff = toSortableMonth(b.endDate) - toSortableMonth(a.endDate);
+    if (endDiff !== 0) return endDiff;
+
+    const startDiff = toSortableMonth(b.startDate) - toSortableMonth(a.startDate);
+    if (startDiff !== 0) return startDiff;
+
+    return (b.priority || 0) - (a.priority || 0);
   });
 }
 

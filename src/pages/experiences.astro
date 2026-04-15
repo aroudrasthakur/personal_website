@@ -1,38 +1,17 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import ExperienceGrid from '@/components/ExperienceGrid';
-import { experiences, sortExperiencesByPriority } from '@/lib/data';
-
-const sorted = sortExperiencesByPriority(experiences);
+const target = '/#experience';
 ---
 
-<Layout title="Experience — Aroudra Thakur" description="Aroudra Thakur's professional experience in software engineering, AI research, and leadership.">
-  <section class="section-reveal page-section">
-    <div class="section-container">
-      <div class="section-header">
-        <h1>All Experiences</h1>
-        <p>My professional journey in software engineering and research</p>
-      </div>
-
-      <ExperienceGrid items={sorted} client:visible />
-
-      <div class="back-link">
-        <a href="/" class="outline-button">← Back to Home</a>
-      </div>
-    </div>
-  </section>
-</Layout>
-
-<style>
-  .page-section {
-    padding: 10rem 0 4rem;
-  }
-
-  .back-link {
-    margin-top: 3rem;
-  }
-
-  @media (max-width: 768px) {
-    .page-section { padding: 8rem 0 3rem; }
-  }
-</style>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>Redirecting...</title>
+    <script is:inline>{`window.location.replace('${target}')`}</script>
+  </head>
+  <body>
+    <a href={target}>Continue to Experience</a>
+  </body>
+</html>

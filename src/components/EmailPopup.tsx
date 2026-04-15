@@ -19,7 +19,14 @@ export default function EmailPopup() {
         className="contact-card-btn"
         aria-label="Show email address"
       >
-        <span className="contact-card-icon">📧</span>
+        <span className="contact-card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img">
+            <path fill="#34a853" d="M21.5 18V8.27l-4.93 3.79L21.5 18Z" />
+            <path fill="#4285f4" d="M2.5 18l4.93-5.94L2.5 8.27V18Z" />
+            <path fill="#ea4335" d="M20 6H4l8 6.2L20 6Z" />
+            <path fill="#fbbc04" d="M20.82 18.67 15.1 11.8 12 14.2 8.9 11.8l-5.72 6.87A2 2 0 0 0 4 19h16a2 2 0 0 0 .82-.33Z" />
+          </svg>
+        </span>
         <span>Email</span>
       </button>
 
@@ -40,7 +47,7 @@ export default function EmailPopup() {
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
             >
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>📧 Email Address</h3>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1.25rem' }}>Email Address</h3>
               <div
                 style={{
                   background: 'var(--bg-primary)',
@@ -57,7 +64,7 @@ export default function EmailPopup() {
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
                 <button onClick={copyEmail} className="glow-button" style={{ fontSize: '0.9rem', padding: '0.7rem 1.5rem' }}>
-                  {copied ? '✓ Copied!' : 'Copy Email'}
+                  {copied ? 'Copied!' : 'Copy Email'}
                 </button>
                 <button
                   onClick={() => setShow(false)}
@@ -100,12 +107,29 @@ export default function EmailPopup() {
           transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
           font-family: inherit;
         }
+
         .contact-card-btn:hover {
           border-color: var(--border-hover);
           transform: translateY(-2px);
           box-shadow: 0 6px 20px rgba(0, 255, 136, 0.08);
         }
-        .contact-card-icon { font-size: 1.25rem; }
+
+        .contact-card-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 2.35rem;
+          height: 2.35rem;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.04);
+          flex-shrink: 0;
+        }
+
+        .contact-card-icon svg {
+          width: 1.1rem;
+          height: 1.1rem;
+        }
       `}</style>
     </>
   );

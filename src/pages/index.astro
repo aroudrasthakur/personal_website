@@ -1,41 +1,57 @@
 ---
 import Layout from '@/layouts/Layout.astro';
-import ThreeHero from '@/components/ThreeHero';
-import SkillTags from '@/components/SkillTags';
+import SkillTicker from '@/components/SkillTicker.astro';
 import ExperienceCarousel from '@/components/ExperienceCarousel';
-import ProjectCarousel from '@/components/ProjectCarousel';
+import ProjectShowcase from '@/components/ProjectShowcase';
 import EmailPopup from '@/components/EmailPopup';
+import profileImage from '../../profile.jpg';
 import {
   experiences,
   projects,
-  sortExperiencesByPriority,
+  sortExperiencesByNewest,
   sortProjectsByPriority,
 } from '@/lib/data';
 
-const topExperiences = sortExperiencesByPriority(experiences).slice(0, 4);
-const topProjects = sortProjectsByPriority(projects).slice(0, 4);
+const sortedExperiences = sortExperiencesByNewest(experiences);
+const sortedProjects = sortProjectsByPriority(projects);
 
-const skills = [
-  'Python', 'Java', 'C/C++', 'TypeScript/JavaScript', 'TensorFlow',
-  'PyTorch', 'OpenCV', 'Django', 'React', 'AWS', 'Docker',
-  'CI/CD', 'Linux', 'PostgreSQL', 'MongoDB', 'Git',
-  'REST/GraphQL', 'Agile Development', 'Data Visualization',
+const spotlightStats = [
+  { value: '10+', label: 'roles and research tracks' },
+  { value: '15+', label: 'projects shipped' },
+  { value: '1', label: 'IEEE publication' },
+];
+
+const workAreas = [
+  'Full-stack systems that feel polished in the UI and reliable under the hood.',
+  'AI and computer vision work spanning pose estimation, ASL recognition, and event-based vision.',
+  'Research-backed engineering that turns prototypes into practical, user-facing products.',
+];
+
+const tickerItems = [
+  { label: 'PYTHON', signal: 'CORE' },
+  { label: 'REACT', signal: 'SHIPPED' },
+  { label: 'DJANGO', signal: 'BACKEND' },
+  { label: 'PYTORCH', signal: 'RESEARCH' },
+  { label: 'AWS', signal: 'DEPLOYED' },
+  { label: 'TYPESCRIPT', signal: 'FULLSTACK' },
+  { label: 'COMPUTER-VISION', signal: 'ACTIVE' },
+  { label: 'DOCKER', signal: 'DELIVERED' },
+  { label: 'FASTAPI', signal: 'BUILDING' },
+  { label: 'NEXTJS', signal: 'PRODUCT' },
 ];
 ---
 
 <Layout>
-  <!-- ===== HERO ===== -->
-  <section id="hero" class="hero-section">
-    <ThreeHero client:load />
+  <section id="hero" class="hero-section page-anchor-section" data-nav-section>
     <div class="hero-overlay">
       <div class="section-container hero-content">
         <p class="hero-greeting">Hello, I'm</p>
         <h1 class="hero-name gradient-text">Aroudra Thakur</h1>
         <p class="hero-subtitle">Full Stack & AI/ML Software Engineer</p>
-        <p class="hero-sub2">Computer Vision Enthusiast · Researcher · Builder</p>
+        <p class="hero-sub2">Computer Vision Enthusiast | Researcher | Builder</p>
         <div class="hero-actions">
-          <a href="/contact" class="glow-button">Get In Touch</a>
-          <a href="/projects" class="outline-button">View Projects</a>
+          <a href="#about" class="glow-button">Explore My Work</a>
+          <a href="#projects" class="outline-button">Jump to Projects</a>
         </div>
       </div>
     </div>
@@ -44,86 +60,114 @@ const skills = [
     </div>
   </section>
 
-  <!-- ===== ABOUT ===== -->
-  <section id="about" class="section-reveal about-section">
+  <section id="about" class="section-reveal about-section page-anchor-section" data-nav-section>
     <div class="section-container">
-      <div class="section-header">
-        <h2>About Me</h2>
-      </div>
-      <div class="about-grid">
-        <div class="about-visual">
-          <div class="about-avatar">
-            <span>👨‍💻</span>
+      <div class="about-hero glass-card">
+        <div class="about-portrait-panel">
+          <div class="portrait-frame">
+            <img src={profileImage.src} alt="Portrait of Aroudra Thakur" class="portrait-image" />
           </div>
-          <div class="about-stats">
-            <div class="stat-item">
-              <span class="stat-number gradient-text">10+</span>
-              <span class="stat-label">Experiences</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number gradient-text">15+</span>
-              <span class="stat-label">Projects</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number gradient-text">1</span>
-              <span class="stat-label">IEEE Paper</span>
-            </div>
+          <div class="portrait-caption">
+            <span class="portrait-kicker">UTA Honors Computer Science</span>
+            <p>
+              Building full-stack products and AI systems with a focus on accessibility, vision, and clean user experiences.
+            </p>
           </div>
         </div>
-        <div class="about-text">
-          <p>
-            Hey! I am an Honors Computer Science student at UT Arlington researching AI, Computer Vision, and Full-Stack Systems Engineering. My work spans event-based vision, pose estimation, and AI accessibility, using tools like TensorFlow, PyTorch, React, and AWS.
+
+        <div class="about-copy-panel">
+          <p class="page-kicker">About Me</p>
+          <h2>Engineer, researcher, and builder focused on turning ambitious ideas into working systems.</h2>
+          <p class="about-lead">
+            I'm Aroudra Thakur, a Computer Science student at The University of Texas at Arlington working across full-stack engineering, AI/ML, and computer vision research. I enjoy building products that feel thoughtful in the interface and rigorous in the system design behind them.
           </p>
-          <p>
-            I've contributed to research under multiple professors, developed deep learning models for real-time vision tasks, and led peer mentoring in Data Structures and Algorithms. Passionate about human-centered AI, I aim to build technologies that advance accessibility, innovation, and impact.
+          <p class="about-body">
+            My recent work spans scalable web applications, human pose estimation, ASL recognition, event-based vision, and AI accessibility. Whether the problem lives in React, Django, PyTorch, AWS, or research code, I like taking it from rough concept to something real, reliable, and useful.
           </p>
-          <div class="about-skills">
-            <h3>Technologies</h3>
-            <SkillTags skills={skills} client:visible />
+
+          <div class="about-pill-row">
+            <span class="about-pill">Full Stack Engineering</span>
+            <span class="about-pill">AI/ML Research</span>
+            <span class="about-pill">Computer Vision</span>
+          </div>
+
+          <div class="spotlight-stats">
+            {spotlightStats.map((stat) => (
+              <div class="spotlight-stat">
+                <strong class="gradient-text">{stat.value}</strong>
+                <span>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="work-areas">
+            {workAreas.map((area) => (
+              <div class="work-area">
+                <span class="work-area-mark">01</span>
+                <p>{area}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== EXPERIENCE ===== -->
-  <section id="experience" class="section-reveal">
+  <section class="section-reveal ticker-section" aria-label="Skills ticker section">
+    <SkillTicker items={tickerItems} />
+  </section>
+
+  <section id="experience" class="section-reveal experience-section page-anchor-section" data-nav-section>
     <div class="section-container">
-      <div class="section-header">
+      <div class="section-header section-header-left">
         <h2>Experience</h2>
-        <p>Where I've been making an impact</p>
+        <p>Roles, research, and leadership work presented in a cleaner scrollable bar that stays easy to scan and simple to use.</p>
       </div>
-      <ExperienceCarousel items={topExperiences} client:visible />
+      <ExperienceCarousel items={sortedExperiences} client:visible />
     </div>
   </section>
 
-  <!-- ===== PROJECTS ===== -->
-  <section id="projects" class="section-reveal">
+  <section id="projects" class="section-reveal projects-section page-anchor-section" data-nav-section>
     <div class="section-container">
-      <div class="section-header">
-        <h2>Featured Projects</h2>
-        <p>Things I've built and shipped</p>
+      <div class="section-header section-header-left">
+        <h2>Projects</h2>
+        <p>A curated project spotlight with a control-room feel, so visitors can explore the work instead of just reading a grid.</p>
       </div>
-      <ProjectCarousel items={topProjects} client:visible />
+      <ProjectShowcase items={sortedProjects} client:visible />
     </div>
   </section>
 
-  <!-- ===== CONTACT ===== -->
-  <section id="contact" class="section-reveal contact-section">
+  <section id="contact" class="section-reveal contact-section page-anchor-section" data-nav-section>
     <div class="section-container">
       <div class="section-header">
         <h2>Get In Touch</h2>
-        <p>I'm always open to discussing new projects, creative ideas, or opportunities</p>
+        <p>I'm always open to discussing new projects, creative ideas, or opportunities.</p>
       </div>
+
       <div class="contact-cards">
         <EmailPopup client:load />
+        <a
+          href="tel:+16824067019"
+          class="contact-card-link"
+        >
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1-.24c1.1.37 2.28.56 3.49.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.21.19 2.39.56 3.49a1 1 0 0 1-.25 1.01l-2.19 2.29Z" />
+            </svg>
+          </span>
+          <span>Call</span>
+        </a>
         <a
           href="https://github.com/aroudrasthakur"
           class="contact-card-link"
           target="_blank"
           rel="noreferrer"
         >
-          <span class="contact-card-icon">💻</span>
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.42-4.04-1.42-.55-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.08 1.82 2.82 1.3 3.5.99.11-.77.42-1.3.76-1.59-2.67-.31-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.57.12-3.27 0 0 1.01-.32 3.3 1.23a11.43 11.43 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.67 1.7.25 2.96.12 3.27.77.84 1.23 1.91 1.23 3.22 0 4.62-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.21.7.83.58A12 12 0 0 0 12 .5Z" />
+            </svg>
+          </span>
           <span>GitHub</span>
         </a>
         <a
@@ -132,14 +176,17 @@ const skills = [
           target="_blank"
           rel="noreferrer"
         >
-          <span class="contact-card-icon">💼</span>
+          <span class="contact-card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img">
+              <path d="M6.94 8.5H3.56V20h3.38V8.5ZM5.25 3A1.97 1.97 0 1 0 5.3 6.94 1.97 1.97 0 0 0 5.25 3Zm14.19 9.85c0-3.46-1.85-5.07-4.32-5.07-1.99 0-2.88 1.09-3.38 1.86V8.5H8.37c.05.76 0 11.5 0 11.5h3.37v-6.42c0-.34.02-.68.13-.92.27-.67.88-1.37 1.91-1.37 1.34 0 1.88 1.03 1.88 2.55V20H19V13.4c0-.18 0-.37-.01-.55Z" />
+            </svg>
+          </span>
           <span>LinkedIn</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- ===== GSAP Hero Timeline ===== -->
   <script>
     import gsap from 'gsap';
 
@@ -158,7 +205,10 @@ const skills = [
 </Layout>
 
 <style>
-  /* ===== Hero ===== */
+  .page-anchor-section {
+    scroll-margin-top: 96px;
+  }
+
   .hero-section {
     position: relative;
     min-height: 100vh;
@@ -187,12 +237,11 @@ const skills = [
   }
 
   .hero-name {
-    font-family: 'Outfit', sans-serif;
     font-size: clamp(2.8rem, 7vw, 5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-weight: 700;
+    letter-spacing: -0.06em;
     margin-bottom: 1rem;
-    line-height: 1.1;
+    line-height: 0.98;
   }
 
   .hero-subtitle {
@@ -236,94 +285,196 @@ const skills = [
     50% { opacity: 1; transform: scaleY(1); }
   }
 
-  /* ===== About ===== */
   .about-section {
-    background: var(--bg-secondary);
-    padding: 6rem 0;
+    padding: 4rem 0 3rem;
+    background:
+      radial-gradient(circle at 22% 18%, rgba(0, 255, 136, 0.08), transparent 20%),
+      radial-gradient(circle at 82% 26%, rgba(0, 204, 255, 0.08), transparent 18%),
+      linear-gradient(180deg, rgba(4, 7, 13, 0), rgba(7, 16, 27, 0.64) 18%, rgba(4, 7, 13, 0.86));
   }
 
-  .about-grid {
+  .about-hero {
     display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
-    align-items: start;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: 2rem;
+    padding: 2rem;
+    background:
+      radial-gradient(circle at top left, rgba(0, 255, 136, 0.08), transparent 24%),
+      radial-gradient(circle at bottom right, rgba(0, 204, 255, 0.08), transparent 24%),
+      linear-gradient(140deg, rgba(14, 21, 33, 0.96), rgba(8, 12, 20, 0.82));
   }
 
-  .about-visual {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  .about-portrait-panel {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
   }
 
-  .about-avatar {
+  .portrait-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: calc(var(--radius-lg) + 6px);
+    min-height: 440px;
+    background:
+      radial-gradient(circle at 24% 18%, rgba(0, 255, 136, 0.12), transparent 26%),
+      linear-gradient(135deg, rgba(13, 24, 36, 0.94), rgba(8, 12, 20, 0.84));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .portrait-frame::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(180deg, transparent, rgba(10, 10, 10, 0.45));
+    pointer-events: none;
+  }
+
+  .portrait-image {
     width: 100%;
-    aspect-ratio: 1;
-    max-width: 300px;
-    background: linear-gradient(135deg, var(--accent-dim), rgba(0, 204, 255, 0.08));
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    border: 1px solid var(--border);
-    margin: 0 auto;
-  }
-
-  .about-stats {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-  }
-
-  .stat-item {
-    text-align: center;
-  }
-
-  .stat-number {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.75rem;
-    font-weight: 700;
+    height: 100%;
+    object-fit: cover;
     display: block;
   }
 
-  .stat-label {
+  .portrait-caption {
+    padding: 1.2rem 1.35rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .portrait-kicker,
+  .page-kicker {
+    display: inline-flex;
+    margin-bottom: 0.85rem;
     font-size: 0.8rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .about-text p {
-    color: var(--text-secondary);
-    font-size: 1.05rem;
-    margin-bottom: 1.25rem;
-    line-height: 1.8;
-  }
-
-  .about-skills {
-    margin-top: 2rem;
-  }
-
-  .about-skills h3 {
-    font-size: 1.1rem;
     color: var(--accent);
-    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
     font-weight: 600;
   }
 
-  /* ===== Sections ===== */
-  #experience {
-    padding: 6rem 0;
+  .portrait-caption p,
+  .about-lead,
+  .about-body {
+    color: var(--text-secondary);
+    line-height: 1.8;
   }
 
-  #projects {
-    padding: 6rem 0;
-    background: var(--bg-secondary);
+  .about-copy-panel h2 {
+    font-size: clamp(2.3rem, 4.8vw, 4.4rem);
+    line-height: 0.98;
+    max-width: 12ch;
+    margin-bottom: 1rem;
   }
 
-  /* ===== Contact ===== */
+  .about-lead {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+  }
+
+  .about-body {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-pill-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-pill {
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    background: rgba(0, 255, 136, 0.08);
+    color: var(--accent);
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+
+  .spotlight-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .spotlight-stat {
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .spotlight-stat strong {
+    display: block;
+    font-size: 1.6rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .spotlight-stat span {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+  }
+
+  .work-areas {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .work-area {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    align-items: start;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.015);
+  }
+
+  .work-area-mark {
+    color: var(--accent);
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+
+  .work-area p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .ticker-section {
+    padding: 0 0 1rem;
+    background: transparent;
+  }
+
+  .experience-section,
+  .projects-section,
   .contact-section {
-    padding: 6rem 0;
+    padding: 4.5rem 0;
+  }
+
+  .projects-section {
+    background:
+      radial-gradient(circle at 78% 18%, rgba(0, 204, 255, 0.08), transparent 18%),
+      radial-gradient(circle at 18% 72%, rgba(0, 255, 136, 0.05), transparent 18%),
+      linear-gradient(180deg, rgba(7, 16, 27, 0.42), rgba(4, 7, 13, 0.88));
+  }
+
+  .section-header-left {
+    text-align: left;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-header-left h2::after {
+    left: 0;
+    transform: none;
   }
 
   .contact-cards {
@@ -331,7 +482,7 @@ const skills = [
     justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
-    max-width: 600px;
+    max-width: 760px;
     margin: 0 auto;
   }
 
@@ -340,48 +491,85 @@ const skills = [
     align-items: center;
     gap: 0.75rem;
     padding: 1rem 1.75rem;
-    background: linear-gradient(135deg, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0.6));
+    background: linear-gradient(135deg, rgba(13, 20, 32, 0.92), rgba(8, 12, 20, 0.74));
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     color: var(--text-primary);
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .contact-card-link:hover {
     border-color: var(--border-hover);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.08);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
   }
 
   .contact-card-icon {
-    font-size: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--accent);
+    flex-shrink: 0;
   }
 
-  /* ===== Responsive ===== */
-  @media (max-width: 768px) {
-    .about-grid {
+  .contact-card-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+    fill: currentColor;
+  }
+
+  @media (max-width: 900px) {
+    .about-hero {
       grid-template-columns: 1fr;
-      gap: 2rem;
     }
 
-    .about-avatar {
-      max-width: 200px;
+    .portrait-frame {
+      min-height: 320px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-hero {
+      padding: 1.5rem;
     }
 
     .hero-name {
       font-size: 2.5rem;
     }
 
-    #experience, #projects, .contact-section, .about-section {
+    .spotlight-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .section-header-left {
+      text-align: center;
+    }
+
+    .section-header-left h2::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .about-section,
+    .experience-section,
+    .projects-section,
+    .contact-section {
       padding: 4rem 0;
     }
   }
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .scroll-line { animation: none; opacity: 0.5; }
+    .scroll-line {
+      animation: none;
+      opacity: 0.5;
+    }
   }
 </style>
