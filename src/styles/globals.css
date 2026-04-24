@@ -57,6 +57,19 @@ h1, h2, h3, h4, h5, h6 {
 
 a { text-decoration: none; color: inherit; }
 
+/* Project descriptions: newline + `command` → ProjectDescription */
+.project-desc-code {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.65rem;
+  color: var(--text-primary);
+}
+
 /* ===== Custom Scrollbar ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }

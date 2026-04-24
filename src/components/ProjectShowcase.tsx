@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Project } from '@/lib/data';
+import { ProjectDescription } from '@/components/ProjectDescription';
+import { getYouTubeVideoId } from '@/lib/youtube';
+import YouTubeAmbientPlayer from '@/components/YouTubeAmbientPlayer';
 
 interface ProjectShowcaseProps {
   items: Project[];
@@ -13,7 +16,10 @@ function hasLink(value: string | null) {
 export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeProject = items[activeIndex];
-
+  const youTubeId =
+    activeProject.embedYouTubeDemo && hasLink(activeProject.demo)
+      ? getYouTubeVideoId(activeProject.demo)
+      : null;
   return (
     <div className="project-showcase">
       <div className="project-showcase-layout">
@@ -43,8 +49,25 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
                   </span>
                 </div>
 
-                <h3 className="project-spotlight-title">{activeProject.title}</h3>
-                <p className="project-spotlight-description">{activeProject.description}</p>
+                <div
+                  className="project-spotlight-content"
+                  data-youtube-embed={youTubeId ? 'true' : undefined}
+                >
+                  <div className="project-spotlight-text">
+                    <h3 className="project-spotlight-title">{activeProject.title}</h3>
+                    {youTubeId && (
+                      <YouTubeAmbientPlayer
+                        videoId={youTubeId}
+                        projectTitle={activeProject.title}
+                        title={`${activeProject.title} — demo video`}
+                      />
+                    )}
+                    <ProjectDescription
+                      text={activeProject.description}
+                      className="project-spotlight-description"
+                    />
+                  </div>
+                </div>
 
                 <div className="project-spotlight-stats">
                   <div className="project-stat-card">
@@ -71,6 +94,11 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
                   {hasLink(activeProject.github) && (
                     <a href={activeProject.github} target="_blank" rel="noreferrer" className="glow-button">
                       View Code
+                    </a>
+                  )}
+                  {hasLink(activeProject.website) && (
+                    <a href={activeProject.website!} target="_blank" rel="noreferrer" className="outline-button">
+                      Visit site
                     </a>
                   )}
                   {hasLink(activeProject.demo) && (
@@ -102,7 +130,7 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
                 <span className="selector-index">{String(index + 1).padStart(2, '0')}</span>
                 <div className="selector-copy">
                   <strong>{project.title}</strong>
-                  <p>{project.description}</p>
+                  <ProjectDescription text={project.description} className="project-selector-preview" />
                 </div>
                 <span className="selector-label">
                   {hasLink(project.demo) ? 'Live' : 'Build'}
@@ -186,6 +214,235 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
           min-height: 100%;
         }
 
+        .project-spotlight-content {
+          display: block;
+        }
+
+        .project-spotlight-text {
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0;
+        }
+
+        .project-youtube-ambient {
+          position: relative;
+          width: 100%;
+          max-width: min(100%, 44rem);
+          margin-bottom: 1.1rem;
+        }
+
+        .project-youtube-ambient-header {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem 1rem;
+          width: 100%;
+          margin-bottom: 0.35rem;
+        }
+
+        .project-youtube-ambient-chrome {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          min-width: 0;
+          font-size: 0.68rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--text-secondary);
+        }
+
+        .project-youtube-ambient-audio {
+          display: flex;
+          align-items: center;
+          gap: 0.55rem;
+          margin-left: auto;
+        }
+
+        .project-youtube-ambient-audio-kicker {
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          color: var(--text-secondary);
+        }
+
+        .project-youtube-audio-switch {
+          flex-shrink: 0;
+          display: block;
+          padding: 0;
+          border: none;
+          background: none;
+          cursor: pointer;
+          line-height: 0;
+        }
+
+        .project-youtube-audio-switch:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 3px;
+          border-radius: 4px;
+        }
+
+        .project-youtube-audio-switch-track {
+          display: block;
+          position: relative;
+          width: 2.6rem;
+          height: 1.35rem;
+          border-radius: 999px;
+          background: var(--bg-card);
+          border: 1px solid var(--border);
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .project-youtube-audio-switch[data-audio='on'] .project-youtube-audio-switch-track {
+          border-color: rgba(0, 255, 136, 0.45);
+          background: var(--accent-dim);
+          box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .project-youtube-audio-switch-thumb {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: calc(1.35rem - 4px);
+          height: calc(1.35rem - 4px);
+          border-radius: 50%;
+          background: var(--text-secondary);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+          transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .project-youtube-audio-switch[data-audio='on'] .project-youtube-audio-switch-thumb {
+          transform: translateX(1.22rem);
+          background: var(--accent);
+          box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .project-youtube-ambient-hint {
+          margin: 0 0 0.4rem 0;
+          text-align: right;
+          width: 100%;
+          font-size: 0.64rem;
+          line-height: 1.35;
+          color: var(--text-secondary);
+        }
+
+        .project-youtube-embed-slab {
+          position: relative;
+          width: 100%;
+        }
+
+        .project-youtube-embed-slab .project-youtube-ambient-rail {
+          position: absolute;
+          left: 0.35rem;
+          top: 0.2rem;
+          bottom: 0.45rem;
+          width: 2px;
+          background: linear-gradient(
+            180deg,
+            var(--accent),
+            rgba(0, 255, 136, 0.15) 40%,
+            rgba(0, 204, 255, 0.35) 100%
+          );
+          box-shadow: 0 0 12px var(--accent-glow);
+          border-radius: 2px;
+          pointer-events: none;
+        }
+
+        .project-youtube-ambient-label {
+          color: var(--accent);
+          font-weight: 800;
+        }
+
+        .project-youtube-ambient-sep {
+          display: block;
+          width: 1.1rem;
+          height: 1px;
+          background: linear-gradient(90deg, var(--accent-secondary), transparent);
+          opacity: 0.6;
+        }
+
+        .project-youtube-ambient-sub {
+          color: var(--text-secondary);
+          font-weight: 600;
+        }
+
+        .project-youtube-embed {
+          position: relative;
+          width: 100%;
+          border-radius: 10px;
+          overflow: hidden;
+          background: #050506;
+          aspect-ratio: 16 / 9;
+          box-shadow:
+            0 0 0 1px rgba(0, 255, 136, 0.12),
+            0 0 0 1px rgba(0, 204, 255, 0.08) inset,
+            0 20px 48px rgba(0, 0, 0, 0.45);
+        }
+
+        .project-youtube-embed::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          pointer-events: none;
+          border-radius: inherit;
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+
+        .project-youtube-embed-fringe {
+          position: absolute;
+          inset: 0;
+          z-index: 3;
+          pointer-events: none;
+          border-radius: inherit;
+          background:
+            linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, transparent 18%),
+            linear-gradient(315deg, rgba(0, 204, 255, 0.08) 0%, transparent 20%),
+            linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 28%);
+        }
+
+        .project-youtube-embed-scan {
+          position: absolute;
+          inset: 0;
+          z-index: 4;
+          pointer-events: none;
+          border-radius: inherit;
+          background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.03) 2px,
+            rgba(0, 0, 0, 0.03) 4px
+          );
+          opacity: 0.4;
+          mix-blend-mode: overlay;
+        }
+
+        .project-youtube-iframe-host {
+          position: absolute;
+          inset: 0;
+          z-index: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+        }
+
+        .project-youtube-iframe-host iframe {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        .project-spotlight-text:has(.project-youtube-ambient) .project-spotlight-title {
+          margin-bottom: 0.55rem;
+        }
+
         .project-signal-row {
           display: flex;
           gap: 0.6rem;
@@ -209,6 +466,7 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
           line-height: 0.96;
           max-width: 9ch;
           letter-spacing: -0.04em;
+          margin-bottom: 0.65rem;
         }
 
         .project-spotlight-description {
@@ -327,7 +585,8 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
           margin-bottom: 0.35rem;
         }
 
-        .selector-copy p {
+        .selector-copy p,
+        .selector-copy .project-selector-preview {
           color: var(--text-secondary);
           font-size: 0.85rem;
           line-height: 1.6;
