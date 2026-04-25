@@ -439,6 +439,7 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
           border: 0;
         }
 
+
         .project-spotlight-text:has(.project-youtube-ambient) .project-spotlight-title {
           margin-bottom: 0.55rem;
         }

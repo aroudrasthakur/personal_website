@@ -390,19 +390,7 @@ const {
         50% { transform: translate3d(2px, -2px, 0) scale(1.35); opacity: 1; }
       }
 
-      html.custom-cursor-enabled,
-      html.custom-cursor-enabled *,
-      html.custom-cursor-enabled *::before,
-      html.custom-cursor-enabled *::after {
-        cursor: none !important;
-      }
-
-      /* Cross-origin iframes steal pointer events from the top document, so the star
-         cursor (window pointermove) would freeze. Disable hit-testing on the embed so
-         events reach the page; playback is still driven by the YouTube IFrame API. */
-      html.custom-cursor-enabled .project-youtube-iframe-host iframe {
-        pointer-events: none !important;
-      }
+      /* cursor: none is declared in globals.css so it reaches React-rendered elements */
 
       #main-nav.scrolled {
         background: rgba(3, 5, 7, 0.9);
