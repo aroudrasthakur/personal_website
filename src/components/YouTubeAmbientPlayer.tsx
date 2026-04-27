@@ -131,8 +131,11 @@ export default function YouTubeAmbientPlayer({ videoId, projectTitle, title }: P
               setAudioOn(!e.target.isMuted());
             },
             onStateChange: (e: { data: number }) => {
-              // 1 = playing, 2 = paused, 0 = ended
-              setIsPlaying(e.data === 1);
+              // 1=playing, 2=paused, 0=ended, 3=buffering
+              // Ignore state 3 (buffering during seek) — it's transient and
+              // setting isPlaying=false would briefly flash the overlay.
+              if (e.data === 1) setIsPlaying(true);
+              else if (e.data === 0 || e.data === 2) setIsPlaying(false);
             },
           },
         } as any);
