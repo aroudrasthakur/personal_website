@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Chomsky';
+  src: url('/fonts/Chomsky.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h3.newspaper-title {
+  font-family: 'Chomsky', 'Times New Roman', Times, serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
 /* ===== Design Tokens ===== */
 :root {
   --bg-primary: #030507;

@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect, useMemo, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
-import type { Experience, ExperienceCategory } from "@/lib/data";
+import type {
+  Experience,
+  ExperienceCategory,
+  ExperienceLinkKind,
+} from "@/lib/data";
 import { formatDate } from "@/lib/data";
 
 interface ExperienceCarouselProps {
@@ -56,6 +60,106 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
       <span className="exp-modal-section-label">{children}</span>
       <div className="exp-modal-section-rule" />
     </div>
+  );
+}
+
+function formatLinkKind(kind: ExperienceLinkKind): string {
+  switch (kind) {
+    case "paper":
+      return "Paper";
+    case "poster":
+      return "Poster";
+    case "preprint":
+      return "Preprint";
+    case "article":
+      return "Article";
+    case "slides":
+      return "Slides";
+    case "code":
+      return "Code";
+    default:
+      return "Link";
+  }
+}
+
+function ExperienceLinkIcon({ kind }: { kind?: ExperienceLinkKind }) {
+  const stroke = {
+    width: 1.7,
+    linecap: "round" as const,
+    linejoin: "round" as const,
+  };
+
+  if (kind === "poster") {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={stroke.width}
+        strokeLinecap={stroke.linecap}
+        strokeLinejoin={stroke.linejoin}
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M3 15l4-4 4 4 3-3 7 7" />
+        <circle cx="8" cy="8" r="1.5" />
+      </svg>
+    );
+  }
+
+  if (kind === "code") {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={stroke.width}
+        strokeLinecap={stroke.linecap}
+        strokeLinejoin={stroke.linejoin}
+      >
+        <path d="M8 6l-6 6 6 6" />
+        <path d="M16 6l6 6-6 6" />
+      </svg>
+    );
+  }
+
+  if (kind === "slides") {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={stroke.width}
+        strokeLinecap={stroke.linecap}
+        strokeLinejoin={stroke.linejoin}
+      >
+        <rect x="3" y="4" width="18" height="13" rx="2" />
+        <path d="M8 21h8" />
+        <path d="M12 17v4" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={stroke.width}
+      strokeLinecap={stroke.linecap}
+      strokeLinejoin={stroke.linejoin}
+    >
+      <path d="M14 3h7v7" />
+      <path d="M10 14L21 3" />
+      <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" />
+    </svg>
   );
 }
 
@@ -421,6 +525,66 @@ function ExperienceModal({
               </span>
             ))}
           </div>
+
+          {/* resources (papers, posters, etc.) */}
+          {exp.links && exp.links.length > 0 && (
+            <>
+              <SectionLabel>Resources</SectionLabel>
+              <ul className="exp-modal-links">
+                {exp.links.map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`exp-modal-link exp-modal-link--${link.kind ?? "link"}`}
+                    >
+                      <span
+                        className="exp-modal-link-icon"
+                        aria-hidden="true"
+                      >
+                        <ExperienceLinkIcon kind={link.kind} />
+                      </span>
+                      <span className="exp-modal-link-body">
+                        <span className="exp-modal-link-label">
+                          {link.label}
+                        </span>
+                        {(link.kind || link.venue) && (
+                          <span className="exp-modal-link-meta">
+                            {link.kind && (
+                              <span className="exp-modal-link-kind">
+                                {formatLinkKind(link.kind)}
+                              </span>
+                            )}
+                            {link.venue && (
+                              <span className="exp-modal-link-venue">
+                                {link.venue}
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </span>
+                      <svg
+                        className="exp-modal-link-arrow"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M7 17L17 7" />
+                        <path d="M8 7h9v9" />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       </motion.div>
 
@@ -770,6 +934,100 @@ function ExperienceModal({
           color: var(--text-primary);
           border-color: rgba(var(--exp-accent-rgb), 0.2);
           background: rgba(var(--exp-accent-rgb), 0.04);
+        }
+
+        /* resources (papers / posters / links) */
+        .exp-modal-links {
+          list-style: none;
+          padding: 0;
+          margin: 0.35rem 0 0;
+          display: grid;
+          gap: 0.5rem;
+        }
+
+        .exp-modal-link {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          gap: 0.85rem;
+          padding: 0.7rem 0.95rem;
+          border-radius: 10px;
+          border: 1px solid rgba(var(--exp-accent-rgb), 0.18);
+          background: rgba(var(--exp-accent-rgb), 0.04);
+          color: var(--text-primary);
+          text-decoration: none;
+          transition: border-color 0.18s ease, background 0.18s ease,
+            transform 0.18s ease;
+        }
+
+        .exp-modal-link:hover {
+          border-color: rgba(var(--exp-accent-rgb), 0.45);
+          background: rgba(var(--exp-accent-rgb), 0.09);
+          transform: translateY(-1px);
+        }
+
+        .exp-modal-link:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.28);
+        }
+
+        .exp-modal-link-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: rgba(var(--exp-accent-rgb), 0.14);
+          color: rgb(var(--exp-accent-rgb));
+        }
+
+        .exp-modal-link-body {
+          display: flex;
+          flex-direction: column;
+          gap: 0.18rem;
+          min-width: 0;
+        }
+
+        .exp-modal-link-label {
+          font-size: 0.92rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          line-height: 1.35;
+          word-break: break-word;
+        }
+
+        .exp-modal-link-meta {
+          display: inline-flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 0.4rem 0.55rem;
+          font-size: 0.74rem;
+          color: var(--text-secondary);
+        }
+
+        .exp-modal-link-kind {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.1rem 0.45rem;
+          border-radius: 999px;
+          background: rgba(var(--exp-accent-rgb), 0.12);
+          border: 1px solid rgba(var(--exp-accent-rgb), 0.2);
+          color: rgb(var(--exp-accent-rgb));
+          font-size: 0.66rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .exp-modal-link-venue {
+          font-style: italic;
+          opacity: 0.85;
+        }
+
+        .exp-modal-link-arrow {
+          color: rgba(var(--exp-accent-rgb), 0.75);
+          flex-shrink: 0;
         }
 
         @media (max-width: 860px) {
@@ -1293,6 +1551,35 @@ export default function ExperienceCarousel({
                           </span>
                         ))}
                       </div>
+                      {exp.links && exp.links.length > 0 && (
+                        <div className="exp-card-links">
+                          {exp.links.map((link, i) => (
+                            <a
+                              key={i}
+                              className={`exp-card-link exp-card-link--${link.kind ?? "link"}`}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              title={
+                                link.venue
+                                  ? `${link.label} — ${link.venue}`
+                                  : link.label
+                              }
+                            >
+                              <span
+                                className="exp-card-link-icon"
+                                aria-hidden="true"
+                              >
+                                <ExperienceLinkIcon kind={link.kind} />
+                              </span>
+                              <span className="exp-card-link-label">
+                                {formatLinkKind(link.kind ?? "link")}
+                              </span>
+                            </a>
+                          ))}
+                        </div>
+                      )}
                       <button
                         className="exp-details-btn"
                         onClick={() => setSelectedExp(exp)}
@@ -1708,6 +1995,60 @@ export default function ExperienceCarousel({
           .exp-details-btn:focus-visible {
             outline: none;
             box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.2);
+          }
+
+          .exp-card-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.15rem 0 0.85rem;
+          }
+
+          .exp-card-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.28rem 0.6rem 0.28rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid rgba(var(--exp-accent-rgb), 0.32);
+            background: rgba(var(--exp-accent-rgb), 0.08);
+            color: rgb(var(--exp-accent-rgb));
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.18s ease, border-color 0.18s ease,
+              transform 0.15s ease;
+          }
+
+          .exp-card-link:hover {
+            background: rgba(var(--exp-accent-rgb), 0.16);
+            border-color: rgba(var(--exp-accent-rgb), 0.55);
+            transform: translateY(-1px);
+          }
+
+          .exp-card-link:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.28);
+          }
+
+          .exp-card-link-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            color: inherit;
+          }
+
+          .exp-card-link-icon svg {
+            width: 13px;
+            height: 13px;
+          }
+
+          .exp-card-link-label {
+            line-height: 1;
           }
 
           .carousel-arrow {

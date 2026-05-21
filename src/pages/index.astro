@@ -26,7 +26,7 @@ const mastheadDate = formatNewsDate(newsLastUpdated);
 const spotlightStats = [
   { value: '10+', label: 'roles and research tracks' },
   { value: '15+', label: 'projects shipped' },
-  { value: '1', label: 'IEEE publication' },
+  { value: '3', label: 'research publications' },
 ];
 
 const workAreas = [
@@ -109,7 +109,7 @@ const tickerItems = [
               </div>
               <header class="newspaper-masthead">
                 <time class="newspaper-issue-date" datetime={newsLastUpdated}>{mastheadDate}</time>
-                <h3 class="newspaper-title">The Aroudra Times</h3>
+                <h3 class="newspaper-title">The <span class="newspaper-title-name">Aroudra</span> Times</h3>
               </header>
               <div class="newspaper-rule" aria-hidden="true"></div>
 
@@ -159,15 +159,19 @@ const tickerItems = [
           <p class="page-kicker">About Me</p>
           <h2>Engineer, researcher, and builder focused on turning ambitious ideas into working systems.</h2>
           <p class="about-lead">
-            I'm Aroudra Thakur, a Computer Science student at The University of Texas at Arlington working across full-stack engineering, AI/ML, and computer vision research. I enjoy building products that feel thoughtful in the interface and rigorous in the system design behind them.
+            I'm Aroudra Thakur, CS student at UT Arlington building at the intersection of AI/ML and full-stack engineering. I've architected production AI systems, shipped full-stack features on live platforms, and published research in computer vision spanning human pose estimation, ASL recognition, and event-based vision.
           </p>
           <p class="about-body">
-            My recent work spans scalable web applications, human pose estimation, ASL recognition, event-based vision, and AI accessibility. Whether the problem lives in React, Django, PyTorch, AWS, or research code, I like taking it from rough concept to something real, reliable, and useful.
+            My stack spans PyTorch, LLM orchestration, RAG, React, Django, PostgreSQL, GraphQL, and AWS. I care about systems that are rigorous under the hood and intuitive on the surface, whether that means a well-tuned retrieval pipeline or a dashboard someone actually wants to use.
+          </p>
+          <p class="about-body">
+            I don't just prototype. I own things end-to-end, from model to interface to deployment.
           </p>
 
           <div class="about-pill-row">
-            <span class="about-pill">Full Stack Engineering</span>
-            <span class="about-pill">AI/ML Research</span>
+            <span class="about-pill">Software Engineering</span>
+            <span class="about-pill">AI Engineering</span>
+            <span class="about-pill">Agentic Development</span>
             <span class="about-pill">Computer Vision</span>
           </div>
 
@@ -608,18 +612,29 @@ const tickerItems = [
 
   .newspaper-title {
     display: block;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-size: clamp(1rem, 10cqi, 2.2rem);
-    font-weight: 900;
-    letter-spacing: 0.005em;
-    line-height: 1;
+    font-family: 'Chomsky', 'Times New Roman', Times, serif;
+    font-size: clamp(1.35rem, 11cqi, 2.6rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.05;
     margin: 0;
     color: var(--newspaper-ink);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
-    font-variant: small-caps;
-    font-stretch: condensed;
     white-space: nowrap;
     text-align: center;
+  }
+
+  .newspaper-title-name {
+    display: inline;
+    margin: 0 0.06em;
+    color: var(--newspaper-ink);
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    text-shadow: none;
+    font-family: inherit;
+    letter-spacing: 0.02em;
   }
 
   .newspaper-rule {

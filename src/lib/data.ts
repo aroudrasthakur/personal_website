@@ -1,5 +1,14 @@
 export type ExperienceCategory = 'industry' | 'research' | 'on-campus';
 
+export type ExperienceLinkKind = 'paper' | 'poster' | 'preprint' | 'article' | 'slides' | 'code' | 'link';
+
+export interface ExperienceLink {
+  label: string;
+  url: string;
+  kind?: ExperienceLinkKind;
+  venue?: string;
+}
+
 export interface Experience {
   id: number;
   title: string;
@@ -13,6 +22,7 @@ export interface Experience {
   logoPath?: string;
   priority: number;
   category: ExperienceCategory;
+  links?: ExperienceLink[];
 }
 
 export interface Project {
@@ -41,16 +51,7 @@ export const experienceLongDescriptions: Record<number, string> = {
 ➤ Redesigned the invoice management system and refactored backend queries to include detailed metadata; integrated frontend view/download features and corrected major UI alignment issues, increasing client usability and visual consistency.
 
 ➤ Collaborated in a fast-paced startup team, ensuring stable deployments and immediate visibility of all production updates on a live web platform.`,
-  2: `➤ Engineered and deployed scalable SaaS modules using React, Django, and PostgreSQL, improving API response times and UI performance by 35%.  
-
-➤ Designed and implemented REST and GraphQL endpoints to support enterprise workflows, optimizing data retrieval and integrating third-party authentication APIs.  
-
-➤ Collaborated with cross-functional teams to identify and resolve bugs in production, enhancing system stability and code reliability.  
-
-➤ Refactored front-end components in TypeScript for dynamic rendering and accessibility, ensuring responsive layouts across multiple client dashboards.  
-
-➤ Applied Agile development practices and version control (Git) to streamline code reviews, documentation, and sprint-based feature delivery.`,
-  3: `➤ Conducting research on hand pose estimation for American Sign Language (ASL) using Computer Vision and Artificial Intelligence to improve gesture recognition accuracy and temporal modeling.  
+  2: `➤ Conducting research on hand pose estimation for American Sign Language (ASL) using Computer Vision and Artificial Intelligence to improve gesture recognition accuracy and temporal modeling.  
 
 ➤ Implemented advanced sequence alignment algorithms, including Dynamic Time Warping (DTW) and Edit Distance, to quantify motion and structural similarity between temporal gesture trajectories.  
 
@@ -66,7 +67,7 @@ export const experienceLongDescriptions: Record<number, string> = {
 
 ➤ The broader objective of this project is to advance accessible communication technologies by integrating self-supervised vision models with linguistic pattern recognition in ASL.`,
 
-  4: `➤ Conducted research in Human Pose Estimation using advanced Computer Vision and Artificial Intelligence methodologies, focusing on deep learning architectures such as CNNs, GCNs, and Transformers.  
+  3: `➤ Conducted research in Human Pose Estimation using advanced Computer Vision and Artificial Intelligence methodologies, focusing on deep learning architectures such as CNNs, GCNs, and Transformers.  
 
 ➤ Published a peer-reviewed paper in IEEE Access titled “A Comprehensive Review of Modern Techniques in Human Pose Estimation,” presenting a rigorous analysis of state-of-the-art models, benchmark datasets, and neural architectures.  
 
@@ -78,7 +79,7 @@ export const experienceLongDescriptions: Record<number, string> = {
 
 ➤ Strengthened expertise in machine learning, data analysis, and experimental design while advancing accessible AI research within human-centered computing.`,
   
-  5: `➤ Facilitated peer-led sessions for undergraduate courses in Data Structures, Algorithms, and Discrete 
+  4: `➤ Facilitated peer-led sessions for undergraduate courses in Data Structures, Algorithms, and Discrete 
 Mathematics, reinforcing core programming, logic, and analytical concepts.  
 
 ➤ Designed interactive coding activities and algorithm visualization exercises to improve conceptual understanding and student engagement.  
@@ -87,7 +88,7 @@ Mathematics, reinforcing core programming, logic, and analytical concepts.
 
 ➤ Created problem sets, mock exams, and structured review materials that enhanced performance and boosted session attendance across multiple cohorts.`,
 
-  6: `➤ Conducting research in event-based computer vision and neuromorphic data analysis under Prof. Diego Patino, focusing on deep learning workflows built with Python, TensorFlow, PyTorch, and OpenCV.
+  5: `➤ Conducting research in event-based computer vision and neuromorphic data analysis under Prof. Diego Patino, focusing on deep learning workflows built with Python, TensorFlow, PyTorch, and OpenCV.
   
 ➤ Collaborating with Ph.D. researchers to design a novel event data representation technique for machine learning pipelines, improving accuracy and efficiency across multiple event-vision benchmarks.  
 
@@ -103,7 +104,7 @@ Mathematics, reinforcing core programming, logic, and analytical concepts.
 
 ➤ Authored the research proposal “Event Cameras: A Survey,” summarizing state-of-the-art datasets, representations, and deep learning approaches in neuromorphic vision.`,
 
-  7: `➤ Successfully organized and managed an APSI event on campus, overseeing participation from 500+ attendees.
+  6: `➤ Successfully organized and managed an APSI event on campus, overseeing participation from 500+ attendees.
 
 ➤ Collaborated with a cross-functional team to coordinate logistics, scheduling, and on-site operations.
 
@@ -111,7 +112,7 @@ Mathematics, reinforcing core programming, logic, and analytical concepts.
 
 ➤ Developed skills in large-scale event planning, stakeholder coordination, and high-pressure problem-solving.`,
 
-  8: `➤ Collaborated in a 4-member team to design and deliver MavPrep, a real-time exam preparation and collaboration platform, presented at the ACM Create Summit, supporting 100+ concurrent users across study sessions.
+  7: `➤ Collaborated in a 4-member team to design and deliver MavPrep, a real-time exam preparation and collaboration platform, presented at the ACM Create Summit, supporting 100+ concurrent users across study sessions.
 
 ➤ Developed a high-performance frontend using Next.js, React, TypeScript, and Tailwind CSS, improving usability and reducing onboarding friction, resulting in 30% faster task completion during user testing.
 
@@ -123,7 +124,7 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Optimized end-to-end real-time communication pipelines across text, voice, and video, reducing synchronization delays by 40% and improving reliability under concurrent usage.`,
 
-  9: `➤ Architected, built, and launched a core AI research agent, owning end-to-end delivery across orchestration, retrieval, extraction, reporting, persistence, and UI integration to create a scalable workflow from query intake to actionable output.
+  8: `➤ Architected, built, and launched a core AI research agent, owning end-to-end delivery across orchestration, retrieval, extraction, reporting, persistence, and UI integration to create a scalable workflow from query intake to actionable output.
 
 ➤ Designed and productionized a multi-stage AI research pipeline spanning entity resolution, semantic retrieval, crawl/search discovery, structured extraction, and automated report generation, reducing manual research effort by 80%+ and cutting end-to-end latency by 50%.
 
@@ -133,7 +134,7 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Implemented entity disambiguation, source verification, and LLM-based relevance scoring for attribution-sensitive research outputs, reducing false positives by 60%+ and improving extraction precision by 40% while strengthening trust and explainability.`,
 
-  10: `➤ Led a team of 7 as Project Manager in ACM Create UTA, driving execution of Silo through sprint planning, task delegation, and cross-functional coordination.
+  9: `➤ Led a team of 7 as Project Manager in ACM Create UTA, driving execution of Silo through sprint planning, task delegation, and cross-functional coordination.
 
 ➤ Defined project roadmap and milestones, ensuring timely delivery and improving team efficiency by 40% through structured agile workflows.
 
@@ -147,21 +148,67 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Designed CI/CD integration endpoints for automated prompt testing workflows, enabling seamless integration with developer pipelines and Git-based version control.`,
 
-  11: `➤ Incoming AI Intern @ HF Sinclair - June 2026`
+  10: `➤ Incoming AI Intern @ HF Sinclair - June 2026`
 }
 
 export const experiences: Experience[] = [
   { id: 1, title: "Software Engineer Intern", company: "Hotspring", location: "Barrington, NH", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "Django", "GraphQL", "AWS", "Docker"], logoPath: "/logo/hotspring_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[1], category: "industry" },
-  { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", location: "Mumbai, India", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], logoPath: "/logo/topsource_worldwide_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[2], category: "industry" },
-  { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", location: "Arlington, TX", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[3], category: "research" },
-  { id: 4, title: "Research Assistant - Human Pose Estimation and AI Systems", company: "The University of Texas at Arlington", location: "Arlington, TX", startDate: "2024-10", endDate: "2025-10", description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.", technologies: ["Python", "JavaScript", "REST APIs"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[4], category: "research" },
-  { id: 5, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[5], category: "on-campus" },
-  { id: 6, title: "Undergraduate Research Assistant", company: "Primal Lab (UTA)", location: "Arlington, TX", startDate: "2025-05", endDate: null, description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.", technologies: ["Event Vision", "PyTorch"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[6], category: "research" },
-  { id: 7, title: "APSI Student Assistant", company: "Honor's College (UTA)", location: "Arlington, TX", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[7], category: "on-campus" },
-  { id: 8, title: "ACM Create Member", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[8], category: "on-campus" },
-  { id: 9, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[9], category: "industry" },
-  { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[10], category: "on-campus" },
-  { id: 11, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: null, description: "Incoming AI Intern @ HF Sinclair - June 2026", technologies: [], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[11], category: "industry" }
+  {
+    id: 2,
+    title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition",
+    company: "The University of Texas at Arlington",
+    location: "Arlington, TX",
+    startDate: "2024-08",
+    endDate: "2025-08",
+    description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.",
+    technologies: ["JavaScript", "HTML/CSS", "Git"],
+    logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
+    priority: 3,
+    longDescription: experienceLongDescriptions[2],
+    category: "research",
+    links: [],
+  },
+  {
+    id: 3,
+    title: "Research Assistant - Human Pose Estimation and AI Systems",
+    company: "The University of Texas at Arlington",
+    location: "Arlington, TX",
+    startDate: "2024-10",
+    endDate: "2025-10",
+    description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.",
+    technologies: ["Python", "JavaScript", "REST APIs"],
+    logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
+    priority: 3,
+    longDescription: experienceLongDescriptions[3],
+    category: "research",
+    links: [
+      { label: "AI in Special Education", url: "https://www.researchgate.net/publication/391316303_Assistive_Technologies_for_Learning_Disabilities_A_Systematic_Review_of_Trends_and_Impact", kind: "poster", venue: "ASEE-GSW Conference 2025" },
+    ],
+  },
+  { id: 4, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[4], category: "on-campus" },
+  {
+    id: 5,
+    title: "Undergraduate Research Assistant",
+    company: "Primal Lab (UTA)",
+    location: "Arlington, TX",
+    startDate: "2025-05",
+    endDate: null,
+    description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.",
+    technologies: ["Event Vision", "PyTorch"],
+    logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
+    priority: 4,
+    longDescription: experienceLongDescriptions[5],
+    category: "research",
+    links: [
+      { label: "Use of Heatmap Representation for High Speed Event-based Vision", url: "https://uta.engineering/innovationday/posters/2026/poster-53.pdf", kind: "poster", venue: "Innovation Day 2026" },
+      { label: "AEDAT Stream Viewer (repo)", url: "https://github.com/aroudrasthakur/AEDAT_video_tool", kind: "code" },
+    ],
+  },
+  { id: 6, title: "APSI Student Assistant", company: "Honor's College (UTA)", location: "Arlington, TX", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[6], category: "on-campus" },
+  { id: 7, title: "ACM Create Member", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[7], category: "on-campus" },
+  { id: 8, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[8], category: "industry" },
+  { id: 9, title: "ACM Create Project Manager", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[9], category: "on-campus" },
+  { id: 10, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: null, description: "Incoming AI Intern @ HF Sinclair - June 2026", technologies: [], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[10], category: "industry" }
 ];
 
 export const projects: Project[] = [
