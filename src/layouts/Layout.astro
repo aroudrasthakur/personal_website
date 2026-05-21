@@ -2,6 +2,7 @@
 import '@/styles/globals.css';
 import { ClientRouter } from 'astro:transitions';
 import ThreeHero from '@/components/ThreeHero';
+import ShootingStars from '@/components/ShootingStars.astro';
 
 interface Props {
   title?: string;
@@ -35,6 +36,7 @@ const {
     <div class="site-canvas" aria-hidden="true">
       <ThreeHero client:idle />
     </div>
+    <ShootingStars />
 
     <div class="star-cursor" id="star-cursor" aria-hidden="true">
       <span class="star-cursor-burst"></span>

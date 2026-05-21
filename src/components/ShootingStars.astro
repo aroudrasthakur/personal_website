@@ -1,0 +1,261 @@
+---
+---
+
+<canvas id="shooting-stars-canvas" width="1" height="1" aria-hidden="true"></canvas>
+
+<style>
+  #shooting-stars-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  (function () {
+    const canvas = document.getElementById(
+      'shooting-stars-canvas',
+    ) as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const prefersReduced = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
+    if (prefersReduced) return;
+
+    // ── Types ─────────────────────────────────────────────────────────────────
+    interface Star {
+      hx: number;       // head x (current position)
+      hy: number;       // head y
+      dx: number;       // direction x (unit vector)
+      dy: number;       // direction y
+      speed: number;    // px/s
+      trailLen: number; // trail length in px
+      glowR: number;    // head glow radius in px
+      lw: number;       // trail line width in px
+      age: number;      // elapsed seconds
+      ttl: number;      // total lifetime seconds
+      warmth: number;   // 0 = cooler blue-white, 1 = warmer yellow-white
+    }
+
+    // ── Config ────────────────────────────────────────────────────────────────
+    const MAX_STARS = 3;
+    const MIN_INTERVAL = 3.5;
+    const MAX_INTERVAL = 7.0;
+
+    // ── State ─────────────────────────────────────────────────────────────────
+    const stars: Star[] = [];
+    let raf = 0;
+    let lastTime = 0;
+    let nextSpawnIn = MIN_INTERVAL + Math.random() * (MAX_INTERVAL - MIN_INTERVAL);
+
+    function rng(lo: number, hi: number): number {
+      return lo + Math.random() * (hi - lo);
+    }
+
+    // ── Spawn ─────────────────────────────────────────────────────────────────
+    function spawnStar(): Star {
+      // Meteor-like angle: 28–62° below horizontal
+      const angleDeg = rng(28, 62);
+      const angleRad = (angleDeg * Math.PI) / 180;
+      const goRight = Math.random() < 0.5;
+      const dx = goRight ? Math.cos(angleRad) : -Math.cos(angleRad);
+      const dy = Math.sin(angleRad); // positive y = downward in canvas space
+
+      const trailLen = rng(220, 500);
+      const speed = rng(680, 1150);
+      const ttl = rng(1.2, 2.6);
+
+      // Spawn from upper viewport region or incoming side edges
+      let hx: number;
+      let hy: number;
+      const edge = Math.random();
+      if (edge < 0.55) {
+        // Top edge — meteor falling down
+        hx = rng(-80, canvas.width + 80);
+        hy = rng(-trailLen * 0.6, -trailLen * 0.1);
+      } else if (goRight) {
+        // Left edge — traveling right and down
+        hx = rng(-trailLen * 0.7, -trailLen * 0.1);
+        hy = rng(-60, canvas.height * 0.5);
+      } else {
+        // Right edge — traveling left and down
+        hx = rng(canvas.width + trailLen * 0.1, canvas.width + trailLen * 0.7);
+        hy = rng(-60, canvas.height * 0.5);
+      }
+
+      return {
+        hx,
+        hy,
+        dx,
+        dy,
+        speed,
+        trailLen,
+        glowR: rng(6, 17),
+        lw: rng(1.1, 2.6),
+        age: 0,
+        ttl,
+        warmth: rng(0.25, 1.0),
+      };
+    }
+
+    // ── Resize ────────────────────────────────────────────────────────────────
+    function resize(): void {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    // ── Draw ──────────────────────────────────────────────────────────────────
+    function drawStar(s: Star): void {
+      const p = s.age / s.ttl;
+      // Squared sine envelope: fast rise, bright hold, clean fade
+      const rawEnv = Math.sin(Math.PI * p);
+      const envelope = rawEnv * rawEnv;
+      if (envelope < 0.004) return;
+
+      const { hx, hy, dx, dy, trailLen, glowR, lw, warmth } = s;
+
+      // Tail tip (behind the head along direction vector)
+      const tx = hx - dx * trailLen;
+      const ty = hy - dy * trailLen;
+
+      // Head color: interpolate warm yellow-white → cool blue-white
+      const hR = Math.round(200 + warmth * 55);  // 200–255
+      const hG = Math.round(222 + warmth * 28);  // 222–250
+      const hB = Math.round(255 - warmth * 42);  // 255–213
+
+      // ── Trail ──────────────────────────────────────────────────────────────
+      // Linear gradient: transparent cool blue at tail → bright warm white at head
+      const grad = ctx.createLinearGradient(tx, ty, hx, hy);
+      grad.addColorStop(0,    `rgba(55,  120, 255, 0)`);
+      grad.addColorStop(0.10, `rgba(90,  155, 255, ${0.06 * envelope})`);
+      grad.addColorStop(0.30, `rgba(150, 195, 255, ${0.24 * envelope})`);
+      grad.addColorStop(0.55, `rgba(200, 220, 255, ${0.50 * envelope})`);
+      grad.addColorStop(0.74, `rgba(228, 238, 255, ${0.72 * envelope})`);
+      grad.addColorStop(0.90, `rgba(${hR}, ${hG}, ${hB}, ${0.88 * envelope})`);
+      grad.addColorStop(1,    `rgba(255, 255, 255, ${envelope})`);
+
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineWidth = lw;
+      ctx.strokeStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+
+      // ── Outer diffuse halo ─────────────────────────────────────────────────
+      // Wide, very soft atmospheric corona around the head
+      const outerR = glowR * 3.4;
+      const outerGlow = ctx.createRadialGradient(hx, hy, 0, hx, hy, outerR);
+      outerGlow.addColorStop(0,    `rgba(215, 235, 255, ${0.22 * envelope})`);
+      outerGlow.addColorStop(0.38, `rgba(180, 215, 255, ${0.08 * envelope})`);
+      outerGlow.addColorStop(0.72, `rgba(140, 190, 255, ${0.03 * envelope})`);
+      outerGlow.addColorStop(1,    `rgba(100, 160, 255, 0)`);
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(hx, hy, outerR, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ── Bright core glow ───────────────────────────────────────────────────
+      // Tight radial bloom: white-hot center → warm → cool at edge
+      const coreGlow = ctx.createRadialGradient(hx, hy, 0, hx, hy, glowR);
+      coreGlow.addColorStop(0,    `rgba(255, 255, 255, ${0.97 * envelope})`);
+      coreGlow.addColorStop(0.15, `rgba(255, 252, 230, ${0.85 * envelope})`);
+      coreGlow.addColorStop(0.42, `rgba(${hR}, ${hG}, ${hB}, ${0.48 * envelope})`);
+      coreGlow.addColorStop(0.72, `rgba(180, 215, 255, ${0.16 * envelope})`);
+      coreGlow.addColorStop(1,    `rgba(140, 190, 255, 0)`);
+      ctx.fillStyle = coreGlow;
+      ctx.beginPath();
+      ctx.arc(hx, hy, glowR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // ── Tick ──────────────────────────────────────────────────────────────────
+    function tick(now: number): void {
+      raf = requestAnimationFrame(tick);
+
+      // Pause when tab is hidden
+      if (document.visibilityState !== 'visible') {
+        lastTime = now;
+        return;
+      }
+
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update and render each star
+      for (let i = stars.length - 1; i >= 0; i--) {
+        const s = stars[i];
+        if (!s) continue;
+
+        s.age += dt;
+        s.hx += s.dx * s.speed * dt;
+        s.hy += s.dy * s.speed * dt;
+
+        // Cull once fully off-screen or lifetime expired
+        const margin = s.trailLen * 2;
+        const offscreen =
+          s.hx < -margin ||
+          s.hx > canvas.width + margin ||
+          s.hy > canvas.height + margin;
+
+        if (s.age >= s.ttl || offscreen) {
+          stars.splice(i, 1);
+        } else {
+          drawStar(s);
+        }
+      }
+
+      // Spawn new stars
+      if (stars.length < MAX_STARS) {
+        nextSpawnIn -= dt;
+        if (nextSpawnIn <= 0) {
+          stars.push(spawnStar());
+          nextSpawnIn = rng(MIN_INTERVAL, MAX_INTERVAL);
+        }
+      }
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    function start(): void {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+      stars.length = 0;
+      nextSpawnIn = rng(MIN_INTERVAL, MAX_INTERVAL);
+
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+      lastTime = performance.now();
+      raf = requestAnimationFrame(tick);
+    }
+
+    // Seed a couple of stars already mid-flight so the screen isn't empty on load
+    function preseed(): void {
+      const count = 1;
+      for (let i = 0; i < count; i++) {
+        const s = spawnStar();
+        // Advance into its lifetime so it appears already traveling
+        const offset = rng(0.08, 0.45) * s.ttl;
+        s.age = offset;
+        s.hx += s.dx * s.speed * offset;
+        s.hy += s.dy * s.speed * offset;
+        stars.push(s);
+      }
+    }
+
+    start();
+    preseed();
+  })();
+</script>

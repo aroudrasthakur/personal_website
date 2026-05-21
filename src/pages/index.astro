@@ -162,10 +162,7 @@ const tickerItems = [
             I'm Aroudra Thakur, CS student at UT Arlington building at the intersection of AI/ML and full-stack engineering. I've architected production AI systems, shipped full-stack features on live platforms, and published research in computer vision spanning human pose estimation, ASL recognition, and event-based vision.
           </p>
           <p class="about-body">
-            My stack spans PyTorch, LLM orchestration, RAG, React, Django, PostgreSQL, GraphQL, and AWS. I care about systems that are rigorous under the hood and intuitive on the surface, whether that means a well-tuned retrieval pipeline or a dashboard someone actually wants to use.
-          </p>
-          <p class="about-body">
-            I don't just prototype. I own things end-to-end, from model to interface to deployment.
+            My stack spans PyTorch, LLM orchestration, RAG, React, Django, PostgreSQL, GraphQL, and AWS. I care about systems that are rigorous under the hood and intuitive on the surface, whether that means a well-tuned retrieval pipeline or a dashboard someone actually wants to use. I don't just prototype. I own things end-to-end, from model to interface to deployment.
           </p>
 
           <div class="about-pill-row">
@@ -185,10 +182,20 @@ const tickerItems = [
           </div>
 
           <div class="work-areas">
-            {workAreas.map((area) => (
-              <div class="work-area">
-                <span class="work-area-mark">01</span>
-                <p>{area}</p>
+            {workAreas.map((area, i) => (
+              <div class="work-area" style={`--work-area-index:${i};`}>
+                <span class="work-area-mark" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div class="work-area-body">
+                  <p>{area}</p>
+                </div>
+                <span class="work-area-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="13 6 19 12 13 18" />
+                  </svg>
+                </span>
               </div>
             ))}
           </div>
@@ -205,7 +212,6 @@ const tickerItems = [
     <div class="section-container">
       <div class="section-header section-header-left">
         <h2>Experience</h2>
-        <p>Roles, research, and leadership work presented in a cleaner scrollable bar that stays easy to scan and simple to use.</p>
       </div>
       <ExperienceCarousel items={sortedExperiences} client:visible />
     </div>
@@ -215,7 +221,6 @@ const tickerItems = [
     <div class="section-container">
       <div class="section-header section-header-left">
         <h2>Projects</h2>
-        <p>A curated project spotlight with a control-room feel, so visitors can explore the work instead of just reading a grid.</p>
       </div>
       <ProjectShowcase items={sortedProjects} client:visible />
     </div>
@@ -868,31 +873,103 @@ const tickerItems = [
 
   .work-areas {
     display: grid;
-    gap: 0.8rem;
+    gap: 0.85rem;
+    counter-reset: work-area;
   }
 
   .work-area {
+    position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.85rem;
-    align-items: start;
-    padding: 1rem;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.95rem;
+    align-items: center;
+    padding: 0.95rem 1.1rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: rgba(255, 255, 255, 0.015);
+    background:
+      linear-gradient(135deg, rgba(0, 255, 136, 0.04), transparent 38%),
+      rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+    transition: border-color 0.25s ease, transform 0.25s ease,
+      background 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .work-area::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-secondary));
+    opacity: 0.55;
+    transition: opacity 0.25s ease, width 0.25s ease;
+  }
+
+  .work-area:hover {
+    border-color: rgba(0, 255, 136, 0.32);
+    transform: translateX(2px);
+    background:
+      linear-gradient(135deg, rgba(0, 255, 136, 0.08), transparent 42%),
+      rgba(255, 255, 255, 0.03);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  }
+
+  .work-area:hover::before {
+    opacity: 1;
+    width: 4px;
   }
 
   .work-area-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.6rem;
+    height: 2.6rem;
+    padding: 0 0.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 136, 0.28);
+    background:
+      radial-gradient(circle at 30% 25%, rgba(0, 255, 136, 0.18), transparent 60%),
+      rgba(0, 255, 136, 0.06);
     color: var(--accent);
-    font-size: 0.76rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 12px rgba(0, 255, 136, 0.35);
+  }
+
+  .work-area-body {
+    min-width: 0;
   }
 
   .work-area p {
     color: var(--text-secondary);
-    line-height: 1.7;
+    line-height: 1.65;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .work-area-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border-radius: 999px;
+    color: var(--text-secondary);
+    opacity: 0.4;
+    transform: translateX(-4px);
+    transition: color 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .work-area:hover .work-area-arrow {
+    color: var(--accent);
+    opacity: 1;
+    transform: translateX(0);
   }
 
   .ticker-section {

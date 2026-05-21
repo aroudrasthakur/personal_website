@@ -69,19 +69,30 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
                   </div>
                 </div>
 
-                <div className="project-spotlight-stats">
-                  <div className="project-stat-card">
-                    <strong>{String(activeProject.tags.length).padStart(2, '0')}</strong>
-                    <span>core technologies</span>
+                <div className="project-focus-card" role="status">
+                  <div className="project-focus-icon" aria-hidden="true">
+                    <span className="project-focus-icon-glyph">✦</span>
+                    <span className="project-focus-icon-dot" />
                   </div>
-                  <div className="project-stat-card">
-                    <strong>{hasLink(activeProject.github) ? 'Repo' : 'Demo'}</strong>
-                    <span>primary destination</span>
+                  <div className="project-focus-body">
+                    <span className="project-focus-label">
+                      {activeProject.spotlightLabel ?? 'FOCUS AREA'}
+                    </span>
+                    <h4 className="project-focus-title">
+                      {activeProject.spotlightTag}
+                    </h4>
+                    {activeProject.spotlightDescription && (
+                      <p className="project-focus-description">
+                        {activeProject.spotlightDescription}
+                      </p>
+                    )}
                   </div>
-                  <div className="project-stat-card">
-                    <strong>P{activeProject.priority}</strong>
-                    <span>spotlight priority</span>
-                  </div>
+                  {activeProject.spotlightBadge && (
+                    <div className="project-focus-badge">
+                      <span className="project-focus-badge-dot" aria-hidden="true" />
+                      {activeProject.spotlightBadge}
+                    </div>
+                  )}
                 </div>
 
                 <div className="project-spotlight-tags">
@@ -476,30 +487,182 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
           font-size: 1.02rem;
         }
 
-        .project-spotlight-stats {
+        .project-focus-card {
+          position: relative;
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 0.8rem;
-        }
-
-        .project-stat-card {
-          padding: 1rem;
+          grid-template-columns: auto minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 1.1rem;
+          padding: 1.1rem 1.3rem;
           border-radius: var(--radius);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(0, 255, 136, 0.22);
+          background:
+            radial-gradient(circle at 14% 12%, rgba(0, 255, 136, 0.16), transparent 48%),
+            radial-gradient(circle at 92% 88%, rgba(0, 204, 255, 0.09), transparent 50%),
+            linear-gradient(135deg, rgba(8, 28, 22, 0.92), rgba(6, 12, 18, 0.88));
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            0 18px 38px rgba(0, 0, 0, 0.35),
+            0 0 0 1px rgba(0, 255, 136, 0.04);
+          overflow: hidden;
+          isolation: isolate;
         }
 
-        .project-stat-card strong {
-          display: block;
-          font-family: 'Outfit', sans-serif;
-          font-size: 1.3rem;
-          margin-bottom: 0.2rem;
+        .project-focus-card::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(180deg, rgba(0, 255, 136, 0.05), transparent 40%);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .project-focus-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          padding: 1px;
+          border-radius: inherit;
+          background: linear-gradient(135deg, rgba(0, 255, 136, 0.35), rgba(0, 204, 255, 0.18) 38%, transparent 70%);
+          -webkit-mask:
+            linear-gradient(#000, #000) content-box,
+            linear-gradient(#000, #000);
+          -webkit-mask-composite: xor;
+                  mask-composite: exclude;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .project-focus-icon {
+          position: relative;
+          z-index: 2;
+          width: 3.1rem;
+          height: 3.1rem;
+          border-radius: 12px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background:
+            radial-gradient(circle at 30% 25%, rgba(0, 255, 136, 0.28), transparent 65%),
+            rgba(0, 255, 136, 0.1);
+          border: 1px solid rgba(0, 255, 136, 0.45);
+          box-shadow:
+            inset 0 0 12px rgba(0, 255, 136, 0.18),
+            0 0 18px rgba(0, 255, 136, 0.18);
+          color: var(--accent);
+          font-size: 1.35rem;
+          line-height: 1;
+        }
+
+        .project-focus-icon-glyph {
+          filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.55));
+        }
+
+        .project-focus-icon-dot {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: var(--accent);
+          box-shadow: 0 0 8px rgba(0, 255, 136, 0.85);
+          animation: focusDotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes focusDotPulse {
+          0%, 100% { opacity: 0.55; transform: scale(0.9); }
+          50% { opacity: 1; transform: scale(1.15); }
+        }
+
+        .project-focus-body {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+          min-width: 0;
+        }
+
+        .project-focus-label {
+          display: inline-flex;
+          align-self: flex-start;
+          align-items: center;
+          padding: 0.18rem 0.55rem;
+          font-size: 0.62rem;
+          font-weight: 700;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: var(--accent);
+          background: rgba(0, 255, 136, 0.08);
+          border: 1px solid rgba(0, 255, 136, 0.25);
+          border-radius: 999px;
+        }
+
+        .project-focus-title {
+          margin: 0;
+          font-family: 'Manrope', sans-serif;
+          font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
           color: var(--text-primary);
+          text-shadow: 0 0 14px rgba(0, 255, 136, 0.18);
         }
 
-        .project-stat-card span {
+        .project-focus-description {
+          margin: 0;
+          font-size: 0.86rem;
+          line-height: 1.5;
           color: var(--text-secondary);
-          font-size: 0.8rem;
+          max-width: 60ch;
+        }
+
+        .project-focus-badge {
+          position: relative;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.42rem 0.85rem;
+          border-radius: 999px;
+          border: 1px solid rgba(0, 204, 255, 0.3);
+          background:
+            linear-gradient(135deg, rgba(0, 204, 255, 0.16), rgba(0, 255, 136, 0.06));
+          color: var(--accent-secondary);
+          font-size: 0.74rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          box-shadow: 0 0 14px rgba(0, 204, 255, 0.18);
+        }
+
+        .project-focus-badge-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: var(--accent-secondary);
+          box-shadow: 0 0 8px rgba(0, 204, 255, 0.8);
+        }
+
+        @media (max-width: 720px) {
+          .project-focus-card {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+              'icon body'
+              'badge badge';
+            gap: 0.9rem 1rem;
+            padding: 1rem 1.1rem;
+          }
+
+          .project-focus-icon { grid-area: icon; }
+          .project-focus-body { grid-area: body; }
+          .project-focus-badge {
+            grid-area: badge;
+            justify-self: start;
+          }
         }
 
         .project-spotlight-tags {
@@ -615,10 +778,6 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
         @media (max-width: 768px) {
           .project-spotlight-title {
             font-size: 2.5rem;
-          }
-
-          .project-spotlight-stats {
-            grid-template-columns: 1fr;
           }
 
           .project-selector-card {
