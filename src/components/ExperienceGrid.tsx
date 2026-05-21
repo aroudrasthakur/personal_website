@@ -22,6 +22,7 @@ export default function ExperienceGrid({ items }: ExperienceGridProps) {
           <div className="exp-full-content">
             <h3 className="exp-full-title">{exp.title}</h3>
             <div className="exp-full-company">{exp.company}</div>
+            <div className="exp-full-location">{exp.location}</div>
             <div className="exp-full-date">
               {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
             </div>
@@ -71,6 +72,12 @@ export default function ExperienceGrid({ items }: ExperienceGridProps) {
           font-weight: 600;
           color: var(--accent);
           font-size: 0.95rem;
+          margin-bottom: 0.15rem;
+        }
+
+        .exp-full-location {
+          color: var(--text-secondary);
+          font-size: 0.85rem;
           margin-bottom: 0.25rem;
         }
 

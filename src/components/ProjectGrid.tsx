@@ -115,7 +115,7 @@ export default function ProjectGrid({ items }: ProjectGridProps) {
           border-radius: 6px;
           font-size: 0.82rem;
           font-weight: 500;
-          transition: all 0.3s ease;
+          transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
         .proj-grid-link:hover {
           background: var(--accent);

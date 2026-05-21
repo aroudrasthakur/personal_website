@@ -136,16 +136,26 @@ const {
         link.addEventListener('click', closeMobileMenu);
       });
 
-      window.addEventListener('scroll', () => {
+      let scrollScheduled = false;
+      const handleScroll = () => {
+        scrollScheduled = false;
         const scrollY = window.scrollY;
         if (scrollY > 50) {
           nav?.classList.add('scrolled');
         } else {
           nav?.classList.remove('scrolled');
         }
-
         setActiveNav();
-      }, { passive: true });
+      };
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (scrollScheduled) return;
+          scrollScheduled = true;
+          requestAnimationFrame(handleScroll);
+        },
+        { passive: true },
+      );
 
       window.addEventListener('load', setActiveNav);
       window.addEventListener('hashchange', setActiveNav);
@@ -157,32 +167,69 @@ const {
         document.body.style.setProperty('cursor', 'none', 'important');
 
         const interactiveSelector = 'a, button, [role="button"], summary, input, textarea, select, label';
-        const setCursorPosition = (x: number, y: number) => {
-          cursor.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(var(--cursor-scale))`;
+        let pendingX = -120;
+        let pendingY = -120;
+        let cursorRaf = 0;
+        const flushCursor = () => {
+          cursorRaf = 0;
+          cursor.style.transform = `translate3d(${pendingX}px, ${pendingY}px, 0) translate(-50%, -50%) scale(var(--cursor-scale))`;
         };
+        const scheduleCursor = () => {
+          if (cursorRaf) return;
+          cursorRaf = requestAnimationFrame(flushCursor);
+        };
+        const setCursorPosition = (x: number, y: number) => {
+          pendingX = x;
+          pendingY = y;
+          scheduleCursor();
+        };
+
+        let cursorVisible = false;
+        let cursorInteractive = false;
+        let cursorPressed = false;
 
         const showCursor = (event: PointerEvent) => {
           if (event.pointerType && event.pointerType !== 'mouse') return;
-
-          setCursorPosition(event.clientX, event.clientY);
-          cursor.classList.add('visible');
+          pendingX = event.clientX;
+          pendingY = event.clientY;
+          scheduleCursor();
+          if (!cursorVisible) {
+            cursorVisible = true;
+            cursor.classList.add('visible');
+          }
         };
 
         const updateCursorState = (event: Event) => {
           const target = event.target as Element | null;
-          const interactiveTarget = target?.closest(interactiveSelector) ?? null;
-          cursor.classList.toggle('interactive', Boolean(interactiveTarget));
+          const next = Boolean(target?.closest(interactiveSelector));
+          if (next === cursorInteractive) return;
+          cursorInteractive = next;
+          cursor.classList.toggle('interactive', next);
+        };
+
+        const setPressed = (pressed: boolean) => {
+          if (pressed === cursorPressed) return;
+          cursorPressed = pressed;
+          cursor.classList.toggle('pressed', pressed);
         };
 
         const hideCursor = () => {
-          cursor.classList.remove('visible', 'pressed', 'interactive');
+          if (cursorVisible) {
+            cursorVisible = false;
+            cursor.classList.remove('visible');
+          }
+          if (cursorInteractive) {
+            cursorInteractive = false;
+            cursor.classList.remove('interactive');
+          }
+          setPressed(false);
           setCursorPosition(-120, -120);
         };
 
         window.addEventListener('pointermove', showCursor, { passive: true });
         document.addEventListener('pointerover', updateCursorState, { passive: true });
-        window.addEventListener('pointerdown', () => cursor.classList.add('pressed'));
-        window.addEventListener('pointerup', () => cursor.classList.remove('pressed'));
+        window.addEventListener('pointerdown', () => setPressed(true), { passive: true });
+        window.addEventListener('pointerup', () => setPressed(false), { passive: true });
         document.addEventListener('mouseleave', hideCursor);
         window.addEventListener('blur', hideCursor);
       }
@@ -241,7 +288,7 @@ const {
         width: 100%;
         z-index: 1000;
         padding: 1.25rem 0;
-        transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: background 0.35s ease, padding 0.35s ease, border-color 0.35s ease;
         background: transparent;
       }
 
@@ -262,11 +309,10 @@ const {
         z-index: 5000;
         pointer-events: none;
         opacity: 0;
+        overflow: visible;
         transform: translate3d(-120px, -120px, 0) translate(-50%, -50%) scale(var(--cursor-scale));
-        transition: opacity 0.14s ease, filter 0.14s ease;
-        filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.28)) drop-shadow(0 0 20px rgba(0, 204, 255, 0.2));
-        will-change: transform, opacity, filter;
-        contain: layout style paint;
+        transition: opacity 0.14s ease;
+        will-change: transform, opacity;
       }
 
       .star-cursor.visible {
@@ -275,7 +321,6 @@ const {
 
       .star-cursor.interactive {
         --cursor-scale: 1.28;
-        filter: drop-shadow(0 0 16px rgba(0, 255, 136, 0.36)) drop-shadow(0 0 28px rgba(0, 204, 255, 0.24));
       }
 
       .star-cursor.pressed {
@@ -295,10 +340,10 @@ const {
       }
 
       .star-cursor::before {
-        inset: -12px;
-        background: radial-gradient(circle, rgba(0, 255, 136, 0.18), rgba(0, 204, 255, 0.08) 48%, transparent 72%);
-        filter: blur(7px);
-        animation: cursorHalo 2.2s ease-in-out infinite;
+        inset: -10px;
+        background: radial-gradient(circle, rgba(0, 255, 136, 0.22), rgba(0, 204, 255, 0.08) 52%, transparent 76%);
+        opacity: 0.85;
+        animation: cursorHalo 2.4s ease-in-out infinite;
       }
 
       .star-cursor::after {
@@ -307,8 +352,8 @@ const {
         top: 0;
         right: 2px;
         background: #fff7c7;
-        box-shadow: 0 0 10px rgba(255, 247, 199, 0.72);
-        animation: cursorSparkle 1.7s ease-in-out infinite;
+        opacity: 0.7;
+        animation: cursorSparkle 1.8s ease-in-out infinite;
       }
 
       .star-cursor-burst,
@@ -349,15 +394,15 @@ const {
         clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
         background: radial-gradient(circle at 38% 34%, #fff7c7 0%, #90ffd1 34%, #41deff 68%, rgba(65, 222, 255, 0.34) 100%);
         transform: rotate(45deg);
-        transition: clip-path 0.14s ease, inset 0.14s ease, transform 0.14s ease, background 0.14s ease;
+        transition: transform 0.14s ease, opacity 0.14s ease;
       }
 
       .star-cursor-ring {
         inset: 2px;
         border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: inset 0 0 0 1px rgba(0, 255, 136, 0.16);
-        transition: inset 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+        border: none;
+        box-shadow: none;
+        transition: inset 0.14s ease;
       }
 
       .star-cursor.interactive .star-cursor-burst {
@@ -366,28 +411,21 @@ const {
       }
 
       .star-cursor.interactive .star-cursor-core {
-        inset: 6px;
-        clip-path: circle(50% at 50% 50%);
-        background: radial-gradient(circle at 40% 38%, #fff7c7 0%, #ffe790 40%, #90ffd1 72%, rgba(65, 222, 255, 0.3) 100%);
-        transform: scale(0.94);
+        transform: rotate(45deg) scale(0.92);
       }
 
       .star-cursor.interactive .star-cursor-ring {
         inset: 0;
-        border-color: rgba(255, 247, 199, 0.3);
-        box-shadow:
-          inset 0 0 0 1px rgba(0, 255, 136, 0.16),
-          0 0 0 1px rgba(255, 247, 199, 0.12);
       }
 
       @keyframes cursorHalo {
-        0%, 100% { transform: scale(0.92); opacity: 0.75; }
-        50% { transform: scale(1.06); opacity: 1; }
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
       }
 
       @keyframes cursorSparkle {
-        0%, 100% { transform: translate3d(0, 0, 0) scale(0.9); opacity: 0.4; }
-        50% { transform: translate3d(2px, -2px, 0) scale(1.35); opacity: 1; }
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 1; }
       }
 
       /* cursor: none is declared in globals.css so it reaches React-rendered elements */
@@ -468,7 +506,7 @@ const {
         width: 24px;
         height: 2px;
         background: var(--text-primary);
-        transition: all 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.3s ease;
         border-radius: 1px;
       }
 

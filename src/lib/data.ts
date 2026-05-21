@@ -1,7 +1,10 @@
+export type ExperienceCategory = 'industry' | 'research' | 'on-campus';
+
 export interface Experience {
   id: number;
   title: string;
   company: string;
+  location: string;
   startDate: string;
   endDate: string | null;
   description: string;
@@ -9,6 +12,7 @@ export interface Experience {
   technologies: string[];
   logoPath?: string;
   priority: number;
+  category: ExperienceCategory;
 }
 
 export interface Project {
@@ -141,20 +145,23 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Built scalable backend services using FastAPI and PostgreSQL (Supabase) to manage prompt suites, versions, and 1K+ test executions with persistent evaluation metrics.
 
-➤ Designed CI/CD integration endpoints for automated prompt testing workflows, enabling seamless integration with developer pipelines and Git-based version control.`
+➤ Designed CI/CD integration endpoints for automated prompt testing workflows, enabling seamless integration with developer pipelines and Git-based version control.`,
+
+  11: `➤ Incoming AI Intern @ HF Sinclair - June 2026`
 }
 
 export const experiences: Experience[] = [
-  { id: 1, title: "Software Engineer Intern", company: "Hotspring", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "AWS", "Docker"], logoPath: "/logo/hotspring_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[1] },
-  { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], logoPath: "/logo/topsource_worldwide_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[2] },
-  { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[3] },
-  { id: 4, title: "Research Assistant - Human Pose Estimation and AI Systems", company: "The University of Texas at Arlington", startDate: "2024-10", endDate: "2025-10", description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.", technologies: ["Python", "JavaScript", "REST APIs"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[4] },
-  { id: 5, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[5] },
-  { id: 6, title: "Undergraduate Research Assistant", company: "Primal Lab (UTA)", startDate: "2025-05", endDate: null, description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.", technologies: ["Event Vision", "PyTorch"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[6] },
-  { id: 7, title: "APSI Student Assistant", company: "Honor's College (UTA)", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[7] },
-  { id: 8, title: "ACM Create Member", company: "ACM (UTA)", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[8] },
-  { id: 9, title: "AI Native Software Engineer Intern", company: "Ozcorp Scientific LLC", startDate: "2025-12", endDate: null, description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[9] },
-  { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[10] },
+  { id: 1, title: "Software Engineer Intern", company: "Hotspring", location: "Barrington, NH", startDate: "2024-08", endDate: "2024-12", description: "Developed full-stack Django and React features, automated S3 workflows, improved UI responsiveness, optimized backend queries, and enhanced live production performance.", technologies: ["React", "Node.js", "Django", "GraphQL", "AWS", "Docker"], logoPath: "/logo/hotspring_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[1], category: "industry" },
+  { id: 2, title: "Software Engineer Intern", company: "TopSource Worldwide", location: "Mumbai, India", startDate: "2024-06", endDate: "2024-08", description: "Developed scalable SaaS modules with React, Django, and PostgreSQL, optimized APIs and UI, improved reliability, and streamlined Agile-based development.", technologies: ["Vue.js", "Python", "PostgreSQL"], logoPath: "/logo/topsource_worldwide_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[2], category: "industry" },
+  { id: 3, title: "Research Assistant - Hand Pose Estimation and Self-Supervised Learning for ASL Recognition", company: "The University of Texas at Arlington", location: "Arlington, TX", startDate: "2024-08", endDate: "2025-08", description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.", technologies: ["JavaScript", "HTML/CSS", "Git"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[3], category: "research" },
+  { id: 4, title: "Research Assistant - Human Pose Estimation and AI Systems", company: "The University of Texas at Arlington", location: "Arlington, TX", startDate: "2024-10", endDate: "2025-10", description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.", technologies: ["Python", "JavaScript", "REST APIs"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[4], category: "research" },
+  { id: 5, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[5], category: "on-campus" },
+  { id: 6, title: "Undergraduate Research Assistant", company: "Primal Lab (UTA)", location: "Arlington, TX", startDate: "2025-05", endDate: null, description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.", technologies: ["Event Vision", "PyTorch"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[6], category: "research" },
+  { id: 7, title: "APSI Student Assistant", company: "Honor's College (UTA)", location: "Arlington, TX", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[7], category: "on-campus" },
+  { id: 8, title: "ACM Create Member", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[8], category: "on-campus" },
+  { id: 9, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[9], category: "industry" },
+  { id: 10, title: "ACM Create Project Manager", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[10], category: "on-campus" },
+  { id: 11, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: null, description: "Incoming AI Intern @ HF Sinclair - June 2026", technologies: [], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[11], category: "industry" }
 ];
 
 export const projects: Project[] = [
@@ -176,6 +183,54 @@ export const projects: Project[] = [
   { id: 16, title: "Cicada AML", description: "Built Cicada AML, a full-stack blockchain anti-money-laundering investigation platform that ingests transaction CSVs, builds wallet graphs, runs 185 heuristics and five ML risk lenses, and surfaces suspicious wallets, clusters, flow explanations, reports, and SAR exports in an investigator-ready dashboard.", icon: "🕵️", tags: ["AML", "Blockchain", "FastAPI", "React", "Machine Learning", "Graph Analytics", "Supabase", "Risk Scoring"], stars: 0, github: "https://github.com/aroudrasthakur/Cicada-AML", demo: null, website: null, priority: 14 },
   { id: 17, title: "Silo", description: "Built Silo, a production-ready prompt testing platform that detects prompt drift, compares baseline vs. candidate versions, runs staged evaluations over stored test cases, and gates deployments with CI-ready pass/fail signals, diagnostics, human review, and optimization telemetry.\n\nTry it out:\n`npm install silo-drift-cli`", icon: "🧪", tags: ["Prompt Testing", "LLMOps", "FastAPI", "Next.js", "Supabase", "CI/CD", "Drift Detection", "CLI"], stars: 5, github: "https://github.com/acmuta/Silo", demo: "https://youtu.be/UvGiuThrQqw", website: "https://silo-frontend.onrender.com/", embedYouTubeDemo: true, priority: 15 },
   ];
+
+export interface NewsUpdate {
+  id: number;
+  /** ISO-style date: YYYY-MM-DD. Used both as sort key and as the visible tab. */
+  date: string;
+  kicker?: string;
+  headline: string;
+  body?: string;
+}
+
+/** Shown in the newspaper masthead as the last-updated date. */
+export const newsLastUpdated = "2026-05-21";
+
+/** Newest first. Add new entries with the date you want shown on the headline. */
+export const newsUpdates: NewsUpdate[] = [
+  {
+    id: 1,
+    date: "2026-05-21",
+    kicker: "Now Shipping",
+    headline: "Silo — Prompt Drift Detection Platform — Goes Live",
+    body: "Led a 7-engineer team to launch Silo, an LLM prompt evaluation platform with CI-gated drift detection. Now installable via `npm install silo-drift-cli`.",
+  },
+  {
+    id: 2,
+    date: "2026-06-01",
+    kicker: "Incoming",
+    headline: "Joining HF Sinclair as AI Intern this June",
+    body: "Aroudra is headed to HF Sinclair in June 2026 to build production AI tooling",
+  },
+  {
+    id: 3,
+    date: "2026-04-15",
+    kicker: "Publication",
+    headline: "MDPI publication submitted and under review. Will they accept it??",
+    body: "Co-authored 'Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications' in MDPI.",
+  },
+];
+
+export function formatNewsDate(dateStr: string): string {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  if (!y || !m || !d) return dateStr;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${months[m - 1]} ${d}, ${y}`;
+}
+
+export function sortNewsByNewest(news: NewsUpdate[]): NewsUpdate[] {
+  return [...news].sort((a, b) => b.date.localeCompare(a.date));
+}
 
 export function formatDate(dateStr: string | null): string {
   if (!dateStr) return 'Present';

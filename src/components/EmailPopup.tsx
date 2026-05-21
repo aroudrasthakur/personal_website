@@ -96,15 +96,14 @@ export default function EmailPopup() {
           align-items: center;
           gap: 0.75rem;
           padding: 1rem 1.75rem;
-          background: linear-gradient(135deg, rgba(22, 22, 22, 0.9), rgba(22, 22, 22, 0.6));
-          backdrop-filter: blur(12px);
+          background: linear-gradient(135deg, rgba(22, 22, 22, 0.94), rgba(22, 22, 22, 0.85));
           border: 1px solid var(--border);
           border-radius: var(--radius);
           color: var(--text-primary);
           font-size: 1rem;
           font-weight: 500;
           cursor: pointer;
-          transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+          transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
           font-family: inherit;
         }
 

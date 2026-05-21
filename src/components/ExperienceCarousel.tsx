@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect, type CSSProperties } from 'react';
-import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'motion/react';
-import type { Experience } from '@/lib/data';
-import { formatDate } from '@/lib/data';
+import { useState, useRef, useEffect, useMemo, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
+import { motion, AnimatePresence } from "motion/react";
+import type { Experience, ExperienceCategory } from "@/lib/data";
+import { formatDate } from "@/lib/data";
 
 interface ExperienceCarouselProps {
   items: Experience[];
@@ -10,8 +10,25 @@ interface ExperienceCarouselProps {
   ctaLabel?: string;
 }
 
+interface TabConfig {
+  id: ExperienceCategory;
+  label: string;
+  /** Comma-separated rgb triplet used for rgba() interpolations within the carousel. */
+  accentRgb: string;
+  accentSecondaryRgb: string;
+}
+
+const EXPERIENCE_TABS: TabConfig[] = [
+  { id: "industry", label: "Industry", accentRgb: "0, 255, 136", accentSecondaryRgb: "0, 214, 143" },
+  { id: "research",   label: "Research",               accentRgb: "255, 85, 102", accentSecondaryRgb: "255, 138, 138" },
+  { id: "on-campus",  label: "On-Campus Involvement",  accentRgb: "255, 210, 63", accentSecondaryRgb: "255, 184, 77" },
+];
+
 function parseBullets(raw: string): string[] {
-  return raw.split('➤').map((s) => s.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return raw
+    .split("➤")
+    .map((s) => s.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
 }
 
 function HighlightedText({ text }: { text: string }) {
@@ -22,7 +39,11 @@ function HighlightedText({ text }: { text: string }) {
 
   while ((match = regex.exec(text)) !== null) {
     if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
-    parts.push(<span key={match.index} className="exp-metric">{match[0]}</span>);
+    parts.push(
+      <span key={match.index} className="exp-metric">
+        {match[0]}
+      </span>,
+    );
     lastIndex = match.index + match[0].length;
   }
   if (lastIndex < text.length) parts.push(text.slice(lastIndex));
@@ -38,28 +59,245 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => void }) {
+function ExperienceLogoPreview({
+  src,
+  company,
+  onClose,
+}: {
+  src: string;
+  company: string;
+  onClose: () => void;
+}) {
+  const titleId = "exp-logo-preview-title";
+  const imgAlt = `${company} logo`;
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [onClose]);
+
+  return (
+    <motion.div
+      className="exp-logo-preview-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <motion.div
+        className="exp-logo-preview-frame"
+        initial={{ opacity: 0, scale: 0.94 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={{ duration: 0.26, ease: [0.23, 1, 0.32, 1] }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          type="button"
+          className="exp-logo-preview-close"
+          onClick={onClose}
+          aria-label="Close preview"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div className="exp-logo-preview-surface">
+          <h2 id={titleId} className="exp-logo-preview-heading">
+            {company}
+          </h2>
+          <div className="exp-logo-preview-img-slot">
+            <img
+              src={src}
+              alt={imgAlt}
+              className="exp-logo-preview-img"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      <style>{`
+        .exp-logo-preview-overlay {
+          position: fixed;
+          inset: 0;
+          z-index: 3000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1.25rem;
+          background: rgba(6, 8, 14, 0.88);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+
+        .exp-logo-preview-frame {
+          position: relative;
+          width: min(392px, calc(100vw - 2.5rem));
+          flex-shrink: 0;
+        }
+
+        .exp-logo-preview-heading {
+          margin: 0 0 0.95rem;
+          padding: 0 0.25rem;
+          font-size: 1.125rem;
+          font-weight: 700;
+          line-height: 1.35;
+          text-align: center;
+          letter-spacing: 0.01em;
+          color: rgba(255, 255, 255, 0.95);
+          text-wrap: balance;
+        }
+
+        .exp-logo-preview-surface {
+          border-radius: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.9);
+          background: #ffffff;
+          padding: 1rem 1rem 1.05rem;
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        }
+
+        .exp-logo-preview-img-slot {
+          margin: 0 auto;
+          flex-shrink: 0;
+          width: min(336px, calc(100vw - 3.5rem), 52vh);
+          height: min(336px, calc(100vw - 3.5rem), 52vh);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+        }
+
+        .exp-logo-preview-img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          border: none;
+          object-fit: contain;
+          object-position: center;
+        }
+
+        .exp-logo-preview-close {
+          position: absolute;
+          top: -40px;
+          right: -50px;
+          z-index: 1;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 255, 255, 0.35);
+          background: rgba(12, 16, 24, 0.95);
+          color: rgba(255, 255, 255, 0.92);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: border-color 0.2s ease, transform 0.15s ease, background 0.2s ease;
+        }
+
+        .exp-logo-preview-close:hover {
+          border-color: rgba(0, 255, 136, 0.45);
+          background: rgba(18, 24, 36, 0.98);
+        }
+
+        .exp-logo-preview-close:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.35);
+        }
+
+        .exp-logo-preview-close:active { transform: scale(0.95); }
+
+        @media (max-width: 480px) {
+          .exp-logo-preview-heading {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+          }
+          .exp-logo-preview-surface { padding: 0.72rem 0.72rem 0.8rem; }
+          .exp-logo-preview-img-slot {
+            width: min(296px, calc(100vw - 2.5rem), 48vh);
+            height: min(296px, calc(100vw - 2.5rem), 48vh);
+          }
+          .exp-logo-preview-close {
+            top: -12px;
+            right: -10px;
+            width: 36px;
+            height: 36px;
+          }
+        }
+      `}</style>
+    </motion.div>
+  );
+}
+
+function ExperienceModal({
+  exp,
+  onClose,
+  onOpenLogo,
+}: {
+  exp: Experience;
+  onClose: () => void;
+  onOpenLogo: (src: string, company: string) => void;
+}) {
   const isCurrent = exp.endDate === null;
   const bullets = exp.longDescription ? parseBullets(exp.longDescription) : [];
 
+  const tabConfig =
+    EXPERIENCE_TABS.find((t) => t.id === exp.category) ?? EXPERIENCE_TABS[0];
+  const themeStyle = {
+    "--exp-accent-rgb": tabConfig.accentRgb,
+    "--exp-accent-secondary-rgb": tabConfig.accentSecondaryRgb,
+    "--exp-accent": `rgb(${tabConfig.accentRgb})`,
+    "--exp-accent-secondary": `rgb(${tabConfig.accentSecondaryRgb})`,
+  } as CSSProperties;
+
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
 
   return (
     <motion.div
       className="exp-modal-overlay"
+      style={themeStyle}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.22 }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <motion.div
         className="exp-modal"
@@ -79,15 +317,35 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           <div className="exp-modal-header-glow" aria-hidden="true" />
 
           <div className="exp-modal-logo-wrap">
-            <div className={`exp-modal-logo-shell${isCurrent ? ' is-current' : ''}`}>
-              {exp.logoPath ? (
-                <img src={exp.logoPath} alt="" className="exp-modal-logo" loading="lazy" decoding="async" />
-              ) : (
+            {exp.logoPath ? (
+              <button
+                type="button"
+                className={`exp-modal-logo-shell exp-modal-logo-open${isCurrent ? " is-current" : ""}`}
+                aria-label={`View full ${exp.company} logo`}
+                onClick={() => onOpenLogo(exp.logoPath!, exp.company)}
+              >
+                <img
+                  src={exp.logoPath}
+                  alt=""
+                  className="exp-modal-logo"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            ) : (
+              <div
+                className={`exp-modal-logo-shell${isCurrent ? " is-current" : ""}`}
+              >
                 <span className="exp-logo-fallback">
-                  {exp.company.split(/\s+/).map((w) => w[0]).join('').slice(0, 3).toUpperCase()}
+                  {exp.company
+                    .split(/\s+/)
+                    .map((w) => w[0])
+                    .join("")
+                    .slice(0, 3)
+                    .toUpperCase()}
                 </span>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           <div className="exp-modal-meta">
@@ -96,13 +354,26 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
               {isCurrent && <span className="exp-modal-badge">Active</span>}
             </div>
             <div className="exp-modal-company">{exp.company}</div>
+            <div className="exp-modal-location">{exp.location}</div>
             <div className="exp-modal-date">
               {formatDate(exp.startDate)} — {formatDate(exp.endDate)}
             </div>
           </div>
 
-          <button className="exp-modal-close" onClick={onClose} aria-label="Close">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+          <button
+            className="exp-modal-close"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            >
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -119,7 +390,13 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
                   <li key={i} className="exp-bullet-item">
                     <span className="exp-bullet-marker" aria-hidden="true">
                       <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
-                        <path d="M1.5 1.5L7.5 4.5L1.5 7.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                        <path
+                          d="M1.5 1.5L7.5 4.5L1.5 7.5"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
                       </svg>
                     </span>
                     <span className="exp-bullet-text">
@@ -130,14 +407,18 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
               </ul>
             </>
           ) : (
-            <p className="exp-modal-placeholder">Full description coming soon.</p>
+            <p className="exp-modal-placeholder">
+              Full description coming soon.
+            </p>
           )}
 
           {/* tech stack */}
           <SectionLabel>Tech Stack</SectionLabel>
           <div className="exp-modal-tech">
             {exp.technologies.map((tech) => (
-              <span key={tech} className="exp-modal-tech-tag">{tech}</span>
+              <span key={tech} className="exp-modal-tech-tag">
+                {tech}
+              </span>
             ))}
           </div>
         </div>
@@ -160,31 +441,30 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         .exp-modal {
           position: relative;
           background: linear-gradient(160deg, rgba(11, 17, 28, 0.99), rgba(7, 10, 18, 0.98));
-          border: 1px solid rgba(0, 255, 136, 0.15);
+          border: 1px solid rgba(var(--exp-accent-rgb), 0.15);
           border-radius: 20px;
           box-shadow:
             0 40px 100px rgba(0, 0, 0, 0.7),
-            0 0 0 1px rgba(0, 255, 136, 0.04),
+            0 0 0 1px rgba(var(--exp-accent-rgb), 0.04),
             inset 0 1px 0 rgba(255, 255, 255, 0.04);
           width: 100%;
           max-width: 800px;
           max-height: 88vh;
           overflow-y: auto;
           scrollbar-width: thin;
-          scrollbar-color: rgba(0, 255, 136, 0.15) transparent;
+          scrollbar-color: rgba(var(--exp-accent-rgb), 0.15) transparent;
         }
 
         .exp-modal::-webkit-scrollbar { width: 4px; }
         .exp-modal::-webkit-scrollbar-track { background: transparent; }
         .exp-modal::-webkit-scrollbar-thumb {
-          background: rgba(0, 255, 136, 0.18);
+          background: rgba(var(--exp-accent-rgb), 0.18);
           border-radius: 2px;
         }
 
-        /* top accent strip */
         .exp-modal-strip {
           height: 3px;
-          background: linear-gradient(90deg, var(--accent), var(--accent-secondary), transparent);
+          background: linear-gradient(90deg, var(--exp-accent), var(--exp-accent-secondary), transparent);
           border-radius: 20px 20px 0 0;
           flex-shrink: 0;
         }
@@ -213,7 +493,7 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           left: -20px;
           width: 220px;
           height: 220px;
-          background: radial-gradient(circle, rgba(0, 255, 136, 0.1), transparent 68%);
+          background: radial-gradient(circle, rgba(var(--exp-accent-rgb), 0.1), transparent 68%);
           pointer-events: none;
         }
 
@@ -227,24 +507,46 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           width: 58px;
           height: 58px;
           border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: rgba(255, 255, 255, 0.97);
+          border: 2px solid rgba(255, 255, 255, 0.92);
+          background: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          padding: 0;
+        }
+
+        button.exp-modal-logo-shell {
+          font: inherit;
+          margin: 0;
+          appearance: none;
+          -webkit-appearance: none;
+          cursor: zoom-in;
+          color: inherit;
+        }
+
+        button.exp-modal-logo-shell:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.28);
+        }
+
+        .exp-modal-logo-shell:has(.exp-logo-fallback) {
           padding: 0.4rem;
+          background: #ffffff;
         }
 
         .exp-modal-logo-shell.is-current {
-          border-color: rgba(0, 255, 136, 0.35);
-          box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.08);
+          border-color: rgba(255, 255, 255, 0.98);
+          box-shadow:
+            0 0 0 1px rgba(var(--exp-accent-rgb), 0.32),
+            0 0 18px rgba(var(--exp-accent-rgb), 0.12);
         }
 
         .exp-modal-logo {
           width: 100%;
           height: 100%;
           object-fit: contain;
+          object-position: center;
           display: block;
         }
 
@@ -277,9 +579,9 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           gap: 0.3rem;
           padding: 0.18rem 0.6rem;
           border-radius: 999px;
-          background: rgba(0, 255, 136, 0.1);
-          border: 1px solid rgba(0, 255, 136, 0.28);
-          color: var(--accent);
+          background: rgba(var(--exp-accent-rgb), 0.1);
+          border: 1px solid rgba(var(--exp-accent-rgb), 0.28);
+          color: var(--exp-accent);
           font-size: 0.7rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -292,7 +594,7 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           width: 5px;
           height: 5px;
           border-radius: 50%;
-          background: var(--accent);
+          background: var(--exp-accent);
           animation: modalBadgePulse 2s ease-in-out infinite;
         }
 
@@ -304,7 +606,13 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         .exp-modal-company {
           font-size: 0.92rem;
           font-weight: 600;
-          color: var(--accent);
+          color: var(--exp-accent);
+          margin-bottom: 0.15rem;
+        }
+
+        .exp-modal-location {
+          font-size: 0.82rem;
+          color: var(--text-secondary);
           margin-bottom: 0.2rem;
         }
 
@@ -334,14 +642,14 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         }
 
         .exp-modal-close:hover {
-          border-color: rgba(0, 255, 136, 0.3);
+          border-color: rgba(var(--exp-accent-rgb), 0.3);
           color: var(--text-primary);
-          background: rgba(0, 255, 136, 0.06);
+          background: rgba(var(--exp-accent-rgb), 0.06);
         }
 
         .exp-modal-close:focus-visible {
           outline: none;
-          box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+          box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.2);
         }
 
         /* body */
@@ -365,7 +673,7 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         .exp-modal-section-label {
           font-size: 0.72rem;
           font-weight: 700;
-          color: var(--accent);
+          color: var(--exp-accent);
           text-transform: uppercase;
           letter-spacing: 0.16em;
           flex-shrink: 0;
@@ -374,7 +682,7 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         .exp-modal-section-rule {
           flex: 1;
           height: 1px;
-          background: linear-gradient(90deg, rgba(0, 255, 136, 0.2), transparent);
+          background: linear-gradient(90deg, rgba(var(--exp-accent-rgb), 0.2), transparent);
         }
 
         /* bullet list */
@@ -399,8 +707,8 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         }
 
         .exp-bullet-item:hover {
-          background: rgba(0, 255, 136, 0.03);
-          border-color: rgba(0, 255, 136, 0.08);
+          background: rgba(var(--exp-accent-rgb), 0.03);
+          border-color: rgba(var(--exp-accent-rgb), 0.08);
         }
 
         .exp-bullet-marker {
@@ -412,9 +720,9 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
           height: 18px;
           margin-top: 0.15rem;
           border-radius: 5px;
-          background: rgba(0, 255, 136, 0.1);
-          border: 1px solid rgba(0, 255, 136, 0.2);
-          color: var(--accent);
+          background: rgba(var(--exp-accent-rgb), 0.1);
+          border: 1px solid rgba(var(--exp-accent-rgb), 0.2);
+          color: var(--exp-accent);
         }
 
         .exp-bullet-text {
@@ -424,7 +732,7 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
         }
 
         .exp-metric {
-          color: var(--accent);
+          color: var(--exp-accent);
           font-weight: 700;
           font-variant-numeric: tabular-nums;
         }
@@ -460,8 +768,8 @@ function ExperienceModal({ exp, onClose }: { exp: Experience; onClose: () => voi
 
         .exp-modal-tech-tag:hover {
           color: var(--text-primary);
-          border-color: rgba(0, 255, 136, 0.2);
-          background: rgba(0, 255, 136, 0.04);
+          border-color: rgba(var(--exp-accent-rgb), 0.2);
+          background: rgba(var(--exp-accent-rgb), 0.04);
         }
 
         @media (max-width: 860px) {
@@ -498,19 +806,230 @@ export default function ExperienceCarousel({
   const [activeIndex, setActiveIndex] = useState(0);
   const [endSpacerWidth, setEndSpacerWidth] = useState(0);
   const [selectedExp, setSelectedExp] = useState<Experience | null>(null);
+  const [logoPreview, setLogoPreview] = useState<{
+    src: string;
+    company: string;
+  } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [activeTab, setActiveTab] = useState<ExperienceCategory>(
+    EXPERIENCE_TABS[0].id,
+  );
 
-  useEffect(() => { setMounted(true); }, []);
+  const activeTabConfig =
+    EXPERIENCE_TABS.find((t) => t.id === activeTab) ?? EXPERIENCE_TABS[0];
+
+  const displayedItems = useMemo(
+    () => items.filter((exp) => exp.category === activeTab),
+    [items, activeTab],
+  );
+
+  const stageThemeStyle = {
+    "--exp-accent-rgb": activeTabConfig.accentRgb,
+    "--exp-accent-secondary-rgb": activeTabConfig.accentSecondaryRgb,
+    "--exp-accent": `rgb(${activeTabConfig.accentRgb})`,
+    "--exp-accent-secondary": `rgb(${activeTabConfig.accentSecondaryRgb})`,
+  } as CSSProperties;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const shell = el.closest(".exp-carousel-shell");
+    let snapRestoreTimer = 0;
+
+    /**
+     * Trackpad / wheel routing (no axis lock — avoids Windows trackpads sticking to vertical):
+     *  - Clearly vertical events → do not intercept; page scrolls.
+     *  - Horizontal-dominant or shift+wheel → scroll carousel.
+     */
+    const onWheel = (e: WheelEvent) => {
+      let dx = e.deltaX;
+      let dy = e.deltaY;
+
+      if (e.shiftKey && dy !== 0 && Math.abs(dy) >= Math.abs(dx)) {
+        dx = dy;
+        dy = 0;
+      }
+
+      const pxScale =
+        e.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : e.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? el.clientWidth
+            : 1;
+      dx *= pxScale;
+      dy *= pxScale;
+
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      // Strong vertical intent → let the document scroll.
+      if (absY > absX * 1.5 && absY > 2) return;
+
+      if (absX < 0.5) return;
+
+      const maxScrollLeft = Math.max(0, el.scrollWidth - el.clientWidth);
+      const prevLeft = el.scrollLeft;
+      const nextLeft = Math.min(Math.max(prevLeft + dx, 0), maxScrollLeft);
+
+      if (nextLeft === prevLeft && absX <= absY) return;
+
+      window.clearTimeout(snapRestoreTimer);
+      el.style.scrollSnapType = "none";
+
+      const prevBehavior = el.style.scrollBehavior;
+      el.style.scrollBehavior = "auto";
+      el.scrollLeft = nextLeft;
+      el.style.scrollBehavior = prevBehavior;
+
+      snapRestoreTimer = window.setTimeout(() => {
+        el.style.scrollSnapType = "";
+      }, 120);
+
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const opts: AddEventListenerOptions = { passive: false };
+    const wheelTarget = shell ?? el;
+    wheelTarget.addEventListener("wheel", onWheel, opts);
+
+    return () => {
+      window.clearTimeout(snapRestoreTimer);
+      wheelTarget.removeEventListener("wheel", onWheel);
+      el.style.scrollSnapType = "";
+    };
+  }, [displayedItems.length, activeTab]);
+
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    const drag = {
+      active: false,
+      pointerId: -1,
+      startX: 0,
+      startScrollLeft: 0,
+      moved: false,
+    };
+
+    const DRAG_THRESHOLD = 6;
+
+    const getMaxScrollLeft = () =>
+      Math.max(0, el.scrollWidth - el.clientWidth);
+
+    const snapToNearest = () => {
+      const cards = Array.from(
+        el.querySelectorAll<HTMLElement>("[data-exp-card]"),
+      );
+      if (!cards.length) return;
+
+      const scrollLeft = el.scrollLeft;
+      let closestCard = cards[0];
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      for (const card of cards) {
+        const distance = Math.abs(card.offsetLeft - scrollLeft);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestCard = card;
+        }
+      }
+
+      closestCard.scrollIntoView({
+        behavior: "smooth",
+        inline: "start",
+        block: "nearest",
+      });
+    };
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      const target = e.target as HTMLElement;
+      if (target.closest("button, a, input, textarea, select, label")) return;
+
+      drag.active = true;
+      drag.pointerId = e.pointerId;
+      drag.startX = e.clientX;
+      drag.startScrollLeft = el.scrollLeft;
+      drag.moved = false;
+
+      el.setPointerCapture(e.pointerId);
+      el.classList.add("is-dragging");
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!drag.active || e.pointerId !== drag.pointerId) return;
+
+      const dx = e.clientX - drag.startX;
+      if (!drag.moved && Math.abs(dx) < DRAG_THRESHOLD) return;
+
+      if (!drag.moved) {
+        drag.moved = true;
+        el.style.scrollSnapType = "none";
+      }
+
+      el.scrollLeft = Math.min(
+        Math.max(drag.startScrollLeft - dx, 0),
+        getMaxScrollLeft(),
+      );
+      e.preventDefault();
+    };
+
+    const endDrag = (e: PointerEvent) => {
+      if (!drag.active || e.pointerId !== drag.pointerId) return;
+
+      drag.active = false;
+      if (el.hasPointerCapture(e.pointerId)) {
+        el.releasePointerCapture(e.pointerId);
+      }
+      el.classList.remove("is-dragging");
+      el.style.scrollSnapType = "";
+
+      if (drag.moved) {
+        snapToNearest();
+        const suppressClick = (ev: MouseEvent) => {
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+        };
+        el.addEventListener("click", suppressClick, true);
+        window.setTimeout(
+          () => el.removeEventListener("click", suppressClick, true),
+          0,
+        );
+      }
+    };
+
+    el.addEventListener("pointerdown", onPointerDown);
+    el.addEventListener("pointermove", onPointerMove, { passive: false });
+    el.addEventListener("pointercancel", endDrag);
+    el.addEventListener("pointerup", endDrag);
+
+    return () => {
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointercancel", endDrag);
+      el.removeEventListener("pointerup", endDrag);
+      el.classList.remove("is-dragging");
+      el.style.scrollSnapType = "";
+    };
+  }, [displayedItems.length, activeTab]);
 
   function updateCarouselState() {
     const el = carouselRef.current;
     if (!el) return;
 
-    const firstItem = el.querySelector('.exp-card-item') as HTMLElement | null;
+    const firstItem = el.querySelector(".exp-card-item") as HTMLElement | null;
     const style = getComputedStyle(el);
     const gap = parseFloat(style.gap) || 20;
     if (firstItem) {
-      setEndSpacerWidth(Math.max(0, el.clientWidth - firstItem.offsetWidth - gap));
+      setEndSpacerWidth(
+        Math.max(0, el.clientWidth - firstItem.offsetWidth - gap),
+      );
     }
 
     const scrollLeft = Math.round(el.scrollLeft);
@@ -518,7 +1037,9 @@ export default function ExperienceCarousel({
     setCanPrev(scrollLeft > 5);
     setCanNext(scrollLeft < maxScroll - 5);
 
-    const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-exp-card]'));
+    const cards = Array.from(
+      el.querySelectorAll<HTMLElement>("[data-exp-card]"),
+    );
     if (!cards.length) return;
 
     let closestIndex = 0;
@@ -539,22 +1060,33 @@ export default function ExperienceCarousel({
     const el = carouselRef.current;
     if (!el) return;
 
-    el.scrollTo({ left: 0, behavior: 'auto' });
+    el.scrollTo({ left: 0, behavior: "auto" });
     setActiveIndex(0);
     updateCarouselState();
-    el.addEventListener('scroll', updateCarouselState, { passive: true });
-    window.addEventListener('resize', updateCarouselState);
+
+    let scheduled = 0;
+    const onScroll = () => {
+      if (scheduled) return;
+      scheduled = window.requestAnimationFrame(() => {
+        scheduled = 0;
+        updateCarouselState();
+      });
+    };
+
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
 
     return () => {
-      el.removeEventListener('scroll', updateCarouselState);
-      window.removeEventListener('resize', updateCarouselState);
+      if (scheduled) window.cancelAnimationFrame(scheduled);
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-  }, [items]);
+  }, [items, activeTab]);
 
   function getScrollAmount() {
     const el = carouselRef.current;
     if (!el) return 0;
-    const item = el.querySelector('.exp-card-item') as HTMLElement | null;
+    const item = el.querySelector(".exp-card-item") as HTMLElement | null;
     if (!item) return el.clientWidth;
     const style = getComputedStyle(el);
     const gap = parseFloat(style.gap) || 20;
@@ -562,12 +1094,19 @@ export default function ExperienceCarousel({
   }
 
   function scroll(dir: number) {
-    carouselRef.current?.scrollBy({ left: dir * getScrollAmount(), behavior: 'smooth' });
+    carouselRef.current?.scrollBy({
+      left: dir * getScrollAmount(),
+      behavior: "smooth",
+    });
   }
 
   return (
     <>
-      <div className="exp-stage">
+      <div
+        className="exp-stage"
+        data-exp-tab={activeTab}
+        style={stageThemeStyle}
+      >
         <div className="exp-stage-head">
           <div>
             <p className="exp-stage-kicker">Interactive timeline</p>
@@ -576,7 +1115,11 @@ export default function ExperienceCarousel({
           <div className="exp-stage-controls">
             <div className="exp-stage-status">
               <span className="exp-stage-count">
-                {String(activeIndex + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
+                {displayedItems.length === 0
+                  ? "00 / 00"
+                  : `${String(activeIndex + 1).padStart(2, "0")} / ${String(
+                      displayedItems.length,
+                    ).padStart(2, "0")}`}
               </span>
               <div className="exp-arrow-row">
                 <button
@@ -585,7 +1128,16 @@ export default function ExperienceCarousel({
                   disabled={!canPrev}
                   aria-label="Previous experience"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="15 18 9 12 15 6" />
                   </svg>
                 </button>
@@ -595,21 +1147,74 @@ export default function ExperienceCarousel({
                   disabled={!canNext}
                   aria-label="Next experience"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>
               </div>
             </div>
             <div className="exp-progress" aria-hidden="true">
-              <span style={{ width: `${((activeIndex + 1) / items.length) * 100}%` }} />
+              <span
+                style={{
+                  width:
+                    displayedItems.length === 0
+                      ? "0%"
+                      : `${((activeIndex + 1) / displayedItems.length) * 100}%`,
+                }}
+              />
             </div>
           </div>
         </div>
 
-        <div className="exp-carousel-shell">
+        <div
+          className="exp-tabs"
+          role="tablist"
+          aria-label="Experience categories"
+        >
+          {EXPERIENCE_TABS.map((tab) => {
+            const count = items.filter((exp) => exp.category === tab.id).length;
+            const isActive = tab.id === activeTab;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls="exp-carousel-panel"
+                className="exp-tab"
+                data-tab={tab.id}
+                data-active={isActive}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                <span className="exp-tab-label">{tab.label}</span>
+                <span className="exp-tab-count" aria-hidden="true">
+                  {String(count).padStart(2, "0")}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div
+          className="exp-carousel-shell"
+          id="exp-carousel-panel"
+          role="tabpanel"
+          aria-label={`${activeTabConfig.label} timeline`}
+        >
+          {displayedItems.length === 0 && (
+            <p className="exp-empty">No experiences in this category yet.</p>
+          )}
           <div ref={carouselRef} className="exp-carousel">
-            {items.map((exp, i) => {
+            {displayedItems.map((exp, i) => {
               const distance = Math.min(Math.abs(activeIndex - i), 3);
 
               return (
@@ -620,38 +1225,72 @@ export default function ExperienceCarousel({
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.06, duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
+                  transition={{
+                    delay: i * 0.06,
+                    duration: 0.45,
+                    ease: [0.23, 1, 0.32, 1],
+                  }}
                 >
                   <div
                     className="glass-card exp-card"
                     data-active={activeIndex === i}
-                    style={{ '--distance': distance } as CSSProperties}
+                    style={{ "--distance": distance } as CSSProperties}
                   >
                     <div className="exp-card-surface">
                       <div className="exp-card-topline">
                         <div className="exp-card-brand">
-                          <span className="exp-index">{String(i + 1).padStart(2, '0')}</span>
-                          <div className="exp-logo-shell" aria-hidden="true">
-                            {exp.logoPath ? (
-                              <img src={exp.logoPath} alt="" className="exp-logo" loading="lazy" decoding="async" />
-                            ) : (
+                          <span className="exp-index">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          {exp.logoPath ? (
+                            <button
+                              type="button"
+                              className="exp-logo-shell exp-logo-hit"
+                              aria-label={`View full ${exp.company} logo`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setLogoPreview({
+                                  src: exp.logoPath!,
+                                  company: exp.company,
+                                });
+                              }}
+                            >
+                              <img
+                                src={exp.logoPath}
+                                alt=""
+                                className="exp-logo"
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </button>
+                          ) : (
+                            <div className="exp-logo-shell" aria-hidden="true">
                               <span className="exp-logo-fallback">
-                                {exp.company.split(/\s+/).map((word) => word[0]).join('').slice(0, 3).toUpperCase()}
+                                {exp.company
+                                  .split(/\s+/)
+                                  .map((word) => word[0])
+                                  .join("")
+                                  .slice(0, 3)
+                                  .toUpperCase()}
                               </span>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                         <span className="exp-date">
-                          {formatDate(exp.startDate)} – {formatDate(exp.endDate)}
+                          {formatDate(exp.startDate)} –{" "}
+                          {formatDate(exp.endDate)}
                         </span>
                       </div>
                       <div className="exp-card-accent" />
                       <h4 className="exp-title">{exp.title}</h4>
                       <div className="exp-company">{exp.company}</div>
+                      <div className="exp-location">{exp.location}</div>
                       <p className="exp-desc">{exp.description}</p>
                       <div className="exp-tech">
                         {exp.technologies.map((tech) => (
-                          <span key={tech} className="tech-tag">{tech}</span>
+                          <span key={tech} className="tech-tag">
+                            {tech}
+                          </span>
                         ))}
                       </div>
                       <button
@@ -660,7 +1299,17 @@ export default function ExperienceCarousel({
                         aria-label={`View full details for ${exp.title}`}
                       >
                         View details
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
                           <polyline points="9 18 15 12 9 6" />
                         </svg>
                       </button>
@@ -669,18 +1318,30 @@ export default function ExperienceCarousel({
                 </motion.div>
               );
             })}
-            <div className="exp-carousel-spacer" aria-hidden="true" style={{ width: `${endSpacerWidth}px` }} />
+            <div
+              className="exp-carousel-spacer"
+              aria-hidden="true"
+              style={{ width: `${endSpacerWidth}px` }}
+            />
           </div>
         </div>
 
         {ctaHref && ctaLabel && (
           <div className="exp-cta">
-            <a href={ctaHref} className="outline-button">{ctaLabel}</a>
+            <a href={ctaHref} className="outline-button">
+              {ctaLabel}
+            </a>
           </div>
         )}
 
         <style>{`
-          .exp-stage { position: relative; }
+          .exp-stage {
+            position: relative;
+            --exp-accent-rgb: 0, 255, 136;
+            --exp-accent-secondary-rgb: 0, 214, 143;
+            --exp-accent: rgb(var(--exp-accent-rgb));
+            --exp-accent-secondary: rgb(var(--exp-accent-secondary-rgb));
+          }
 
           .exp-stage-head {
             display: flex;
@@ -691,17 +1352,115 @@ export default function ExperienceCarousel({
           }
 
           .exp-stage-kicker {
-            color: var(--accent);
+            color: var(--exp-accent);
             text-transform: uppercase;
             letter-spacing: 0.14em;
             font-size: 0.78rem;
             margin-bottom: 0.35rem;
             font-weight: 600;
+            transition: color 0.3s ease;
           }
 
           .exp-stage-title { font-size: 1.5rem; color: var(--text-primary); }
 
           .exp-stage-controls { display: grid; gap: 0.5rem; min-width: 220px; }
+
+          .exp-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0 0 1.1rem;
+            padding: 0.35rem;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .exp-tab {
+            position: relative;
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            padding: 0.55rem 0.65rem;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition:
+              color 0.2s ease,
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              transform 0.15s ease;
+            text-align: center;
+          }
+
+          .exp-tab-label {
+            line-height: 1.25;
+            text-wrap: balance;
+          }
+
+          .exp-tab[data-tab='industry']  { --tab-rgb: 0, 255, 136; }
+          .exp-tab[data-tab='research']    { --tab-rgb: 255, 85, 102; }
+          .exp-tab[data-tab='on-campus']   { --tab-rgb: 255, 210, 63; }
+
+          .exp-tab:hover {
+            color: var(--text-primary);
+            background: rgba(var(--tab-rgb), 0.06);
+            border-color: rgba(var(--tab-rgb), 0.18);
+          }
+
+          .exp-tab:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--tab-rgb), 0.28);
+          }
+
+          .exp-tab[data-active='true'] {
+            color: rgb(var(--tab-rgb));
+            background: rgba(var(--tab-rgb), 0.1);
+            border-color: rgba(var(--tab-rgb), 0.42);
+            box-shadow:
+              0 0 0 1px rgba(var(--tab-rgb), 0.06),
+              0 12px 26px rgba(0, 0, 0, 0.22);
+          }
+
+          .exp-tab[data-active='true']::after {
+            content: '';
+            position: absolute;
+            left: 14%;
+            right: 14%;
+            bottom: -1px;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, rgb(var(--tab-rgb)), transparent);
+          }
+
+          .exp-tab-count {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0.15rem 0.45rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.06);
+            color: inherit;
+          }
+
+          .exp-tab[data-active='true'] .exp-tab-count {
+            background: rgba(var(--tab-rgb), 0.18);
+          }
+
+          .exp-empty {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            padding: 1.5rem 0;
+            text-align: center;
+          }
 
           .exp-stage-status {
             display: flex;
@@ -731,8 +1490,8 @@ export default function ExperienceCarousel({
             display: block;
             height: 100%;
             border-radius: inherit;
-            background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--exp-accent), var(--exp-accent-secondary));
+            transition: width 0.3s ease, background 0.3s ease;
           }
 
           .exp-carousel-shell { position: relative; }
@@ -746,10 +1505,23 @@ export default function ExperienceCarousel({
             scroll-behavior: smooth;
             scrollbar-width: none;
             overscroll-behavior-x: contain;
-            overscroll-behavior-y: none;
-            touch-action: pan-x;
+            overscroll-behavior-y: auto;
+            touch-action: pan-x pan-y;
             padding: 0.75rem 0 1rem;
             -ms-overflow-style: none;
+            cursor: grab;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .exp-carousel.is-dragging {
+            cursor: grabbing;
+            scroll-behavior: auto;
+            user-select: none;
+          }
+
+          .exp-carousel.is-dragging * {
+            cursor: grabbing;
+            user-select: none;
           }
 
           .exp-carousel::-webkit-scrollbar { display: none; }
@@ -782,8 +1554,8 @@ export default function ExperienceCarousel({
           }
 
           .exp-card[data-active='true'] {
-            border-color: rgba(0, 255, 136, 0.18);
-            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(0, 255, 136, 0.04);
+            border-color: rgba(var(--exp-accent-rgb), 0.18);
+            box-shadow: 0 22px 44px rgba(0, 0, 0, 0.24), 0 0 0 1px rgba(var(--exp-accent-rgb), 0.04);
           }
 
           .exp-card-surface {
@@ -807,30 +1579,56 @@ export default function ExperienceCarousel({
           .exp-index {
             font-size: 0.78rem;
             font-weight: 700;
-            color: var(--accent);
+            color: var(--exp-accent);
             letter-spacing: 0.12em;
+            transition: color 0.3s ease;
           }
 
           .exp-logo-shell {
             width: 46px;
             height: 46px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.96);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             flex-shrink: 0;
-            padding: 0.35rem;
+            padding: 0;
           }
 
-          .exp-logo { width: 100%; height: 100%; object-fit: contain; display: block; }
+          button.exp-logo-shell.exp-logo-hit {
+            font: inherit;
+            margin: 0;
+            appearance: none;
+            -webkit-appearance: none;
+            cursor: zoom-in;
+            color: inherit;
+          }
+
+          button.exp-logo-shell.exp-logo-hit:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.22);
+          }
+
+          .exp-logo-shell:has(.exp-logo-fallback) {
+            padding: 0.32rem;
+            background: #ffffff;
+          }
+
+          .exp-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+          }
 
           .exp-logo-fallback {
             font-size: 0.76rem;
             letter-spacing: 0.12em;
-            color: var(--accent);
+            color: var(--exp-accent);
             font-weight: 700;
           }
 
@@ -841,8 +1639,9 @@ export default function ExperienceCarousel({
             width: 88px;
             height: 88px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0, 255, 136, 0.22), transparent 70%);
+            background: radial-gradient(circle, rgba(var(--exp-accent-rgb), 0.22), transparent 70%);
             pointer-events: none;
+            transition: background 0.3s ease;
           }
 
           .exp-title {
@@ -854,8 +1653,15 @@ export default function ExperienceCarousel({
 
           .exp-company {
             font-weight: 600;
-            color: var(--accent);
+            color: var(--exp-accent);
             font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            transition: color 0.3s ease;
+          }
+
+          .exp-location {
+            color: var(--text-secondary);
+            font-size: 0.84rem;
             margin-bottom: 0.75rem;
           }
 
@@ -883,25 +1689,25 @@ export default function ExperienceCarousel({
             align-self: flex-start;
             padding: 0.4rem 0.85rem;
             border-radius: 999px;
-            border: 1px solid rgba(0, 255, 136, 0.22);
-            background: rgba(0, 255, 136, 0.06);
-            color: var(--accent);
+            border: 1px solid rgba(var(--exp-accent-rgb), 0.22);
+            background: rgba(var(--exp-accent-rgb), 0.06);
+            color: var(--exp-accent);
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
             letter-spacing: 0.02em;
           }
 
           .exp-details-btn:hover {
-            background: rgba(0, 255, 136, 0.12);
-            border-color: rgba(0, 255, 136, 0.4);
+            background: rgba(var(--exp-accent-rgb), 0.12);
+            border-color: rgba(var(--exp-accent-rgb), 0.4);
             transform: translateX(2px);
           }
 
           .exp-details-btn:focus-visible {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+            box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.2);
           }
 
           .carousel-arrow {
@@ -922,14 +1728,14 @@ export default function ExperienceCarousel({
 
           .carousel-arrow:hover:not(:disabled) {
             transform: scale(1.04);
-            border-color: rgba(0, 255, 136, 0.24);
+            border-color: rgba(var(--exp-accent-rgb), 0.24);
             box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
           }
 
           .carousel-arrow:focus-visible {
             outline: none;
-            border-color: rgba(0, 255, 136, 0.5);
-            box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.18);
+            border-color: rgba(var(--exp-accent-rgb), 0.5);
+            box-shadow: 0 0 0 3px rgba(var(--exp-accent-rgb), 0.18);
           }
 
           .carousel-arrow:active:not(:disabled) { transform: scale(0.96); }
@@ -948,14 +1754,28 @@ export default function ExperienceCarousel({
         `}</style>
       </div>
 
-      {mounted && createPortal(
-        <AnimatePresence>
-          {selectedExp && (
-            <ExperienceModal exp={selectedExp} onClose={() => setSelectedExp(null)} />
-          )}
-        </AnimatePresence>,
-        document.body
-      )}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {logoPreview && (
+              <ExperienceLogoPreview
+                key="exp-logo-preview"
+                src={logoPreview.src}
+                company={logoPreview.company}
+                onClose={() => setLogoPreview(null)}
+              />
+            )}
+            {selectedExp && (
+              <ExperienceModal
+                key={selectedExp.id}
+                exp={selectedExp}
+                onClose={() => setSelectedExp(null)}
+                onOpenLogo={(src, company) => setLogoPreview({ src, company })}
+              />
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </>
   );
 }

@@ -414,11 +414,10 @@ export default function ProjectShowcase({ items }: ProjectShowcaseProps) {
             0deg,
             transparent,
             transparent 2px,
-            rgba(0, 0, 0, 0.03) 2px,
-            rgba(0, 0, 0, 0.03) 4px
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
           );
           opacity: 0.4;
-          mix-blend-mode: overlay;
         }
 
         .project-youtube-iframe-host {
