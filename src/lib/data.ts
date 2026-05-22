@@ -190,7 +190,7 @@ export const experiences: Experience[] = [
     longDescription: experienceLongDescriptions[3],
     category: "research",
     links: [
-      { label: "AI in Special Education", url: "https://www.researchgate.net/publication/391316303_Assistive_Technologies_for_Learning_Disabilities_A_Systematic_Review_of_Trends_and_Impact", kind: "poster", venue: "ASEE-GSW Conference 2025" },
+      { label: "AI in Special Education", url: "https://peer.asee.org/assistive-technologies-for-learning-disabilities-a-systematic-review-of-trends-and-impact", kind: "poster", venue: "ASEE-GSW Conference 2025" },
     ],
   },
   { id: 4, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[4], category: "on-campus" },
