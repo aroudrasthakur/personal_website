@@ -54,6 +54,7 @@ const {
           <li><a href="/#hero" data-nav-target="hero">Home</a></li>
           <li><a href="/#about" data-nav-target="about">About</a></li>
           <li><a href="/#experience" data-nav-target="experience">Experience</a></li>
+          <li><a href="/#publications" data-nav-target="publications">Publications</a></li>
           <li><a href="/#projects" data-nav-target="projects">Projects</a></li>
           <li><a href="/#contact" data-nav-target="contact">Contact</a></li>
         </ul>
@@ -68,6 +69,7 @@ const {
           <li><a href="/#hero" data-nav-target="hero">Home</a></li>
           <li><a href="/#about" data-nav-target="about">About</a></li>
           <li><a href="/#experience" data-nav-target="experience">Experience</a></li>
+          <li><a href="/#publications" data-nav-target="publications">Publications</a></li>
           <li><a href="/#projects" data-nav-target="projects">Projects</a></li>
           <li><a href="/#contact" data-nav-target="contact">Contact</a></li>
         </ul>
@@ -86,6 +88,7 @@ const {
         </div>
         <div class="footer-links">
           <a href="/#about">About</a>
+          <a href="/#publications">Publications</a>
           <a href="/#projects">Projects</a>
           <a href="/#contact">Contact</a>
         </div>
@@ -98,7 +101,7 @@ const {
       const overlay = document.getElementById('mobile-nav-overlay');
       const nav = document.getElementById('main-nav');
       const navLinks = Array.from(document.querySelectorAll('[data-nav-target]')) as HTMLAnchorElement[];
-      const sectionIds = ['hero', 'about', 'experience', 'projects', 'contact'];
+      const sectionIds = ['hero', 'about', 'experience', 'publications', 'projects', 'contact'];
       const cursor = document.getElementById('star-cursor');
       const supportsCustomCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const reduceCursorMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

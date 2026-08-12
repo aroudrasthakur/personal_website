@@ -25,6 +25,27 @@ export interface Experience {
   links?: ExperienceLink[];
 }
 
+export type PublicationKind = 'paper' | 'poster' | 'preprint';
+
+export interface PublicationLink {
+  label: string;
+  url: string;
+}
+
+export interface Publication {
+  id: number;
+  title: string;
+  /** Short type label shown on the card, e.g. "Peer-reviewed paper". */
+  label: string;
+  description: string;
+  kind: PublicationKind;
+  venue?: string;
+  /** ISO-style month: YYYY-MM */
+  date?: string;
+  links: PublicationLink[];
+  priority?: number;
+}
+
 export interface Project {
   id: number;
   title: string;
@@ -241,6 +262,39 @@ export const projects: Project[] = [
   { id: 16, title: "Silo", spotlightTag: "AI Evaluation Pipelines", spotlightLabel: "FOCUS AREA", spotlightDescription: "Systems for testing, validating, and monitoring AI behavior before it reaches production.", spotlightBadge: "AI Systems", description: "Built Silo, a production-ready prompt testing platform that detects prompt drift, compares baseline vs. candidate versions, runs staged evaluations over stored test cases, and gates deployments with CI-ready pass/fail signals, diagnostics, human review, and optimization telemetry.\n\nTry it out:\n`npm install silo-drift-cli`", icon: "🧪", tags: ["Prompt Testing", "LLM Guardrails", "Vector Search", "Automation", "LLMOps", "FastAPI", "Next.js", "Supabase", "CI/CD"], stars: 5, github: "https://github.com/acmuta/Silo", demo: "https://youtu.be/UvGiuThrQqw", website: "https://silo-frontend.onrender.com/", embedYouTubeDemo: true, priority: 15 },
   ];
 
+export const publications: Publication[] = [
+  {
+    id: 1,
+    title:
+      'Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications',
+    label: 'Peer-reviewed paper',
+    description:
+      'Survey analyzing state-of-the-art 2D/3D pose estimation models, benchmarking frameworks, and engineering applications for accessible AI systems.',
+    kind: 'paper',
+    venue: 'MDPI — Journal of Experimental and Theoretical Analyses (JETA)',
+    date: '2026-08',
+    links: [{ label: 'Read on MDPI', url: 'https://www.mdpi.com/2813-4648/4/3/28' }],
+    priority: 10,
+  },
+  {
+    id: 2,
+    title: 'AI in Special Education',
+    label: 'Conference poster',
+    description:
+      'Presented research on AI-driven vision systems for Special Education and assistive learning contexts at the ASEE Gulf-Southwest conference.',
+    kind: 'poster',
+    venue: 'ASEE-GSW Conference 2025',
+    date: '2025-03',
+    links: [
+      {
+        label: 'View on ASEE Peer',
+        url: 'https://peer.asee.org/assistive-technologies-for-learning-disabilities-a-systematic-review-of-trends-and-impact',
+      },
+    ],
+    priority: 9,
+  },
+];
+
 export interface NewsUpdate {
   id: number;
   /** ISO-style date: YYYY-MM-DD. Used both as sort key and as the visible tab. */
@@ -330,5 +384,13 @@ export function sortProjectsByPriority(projs: Project[]): Project[] {
   return [...projs].sort((a, b) => {
     if ((b.priority || 0) !== (a.priority || 0)) return (b.priority || 0) - (a.priority || 0);
     return b.stars - a.stars;
+  });
+}
+
+export function sortPublicationsByNewest(pubs: Publication[]): Publication[] {
+  return [...pubs].sort((a, b) => {
+    const dateDiff = (b.date ?? '').localeCompare(a.date ?? '');
+    if (dateDiff !== 0) return dateDiff;
+    return (b.priority || 0) - (a.priority || 0);
   });
 }
