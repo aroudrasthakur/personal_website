@@ -77,11 +77,11 @@ export const experienceLongDescriptions: Record<number, string> = {
 
   3: `➤ Conducted research in Human Pose Estimation using advanced Computer Vision and Artificial Intelligence methodologies, focusing on deep learning architectures such as CNNs, GCNs, and Transformers.  
 
-➤ Published a peer-reviewed paper in IEEE Access titled “A Comprehensive Review of Modern Techniques in Human Pose Estimation,” presenting a rigorous analysis of state-of-the-art models, benchmark datasets, and neural architectures.  
+➤ Published a peer-reviewed paper in MDPI - JETA titled “Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications,” presenting a rigorous analysis of state-of-the-art models, benchmark datasets, and neural architectures.  
 
 ➤ Collaborated on the development and evaluation of neural networks tailored for 2D and 3D pose estimation, improving spatial keypoint detection accuracy and inference efficiency.  
 
-➤ Presented a research poster at the SEE GSW Conference, highlighting the integration of AI-driven vision systems in Special Education and assistive learning contexts.  
+➤ Presented a research poster at the ASEE GSW Conference, highlighting the integration of AI-driven vision systems in Special Education and assistive learning contexts.  
 
 ➤ Contributed to dataset preprocessing, model training, and comparative analysis of pose estimation pipelines using frameworks like TensorFlow, PyTorch, and OpenCV.  
 
@@ -156,7 +156,8 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Designed CI/CD integration endpoints for automated prompt testing workflows, enabling seamless integration with developer pipelines and Git-based version control.`,
 
-  10: `➤ Incoming AI Intern @ HF Sinclair - June 2026`
+  10: `➤ AI Intern @ HF Sinclair`,
+  11: `➤ Director of Tech Team @ HackUTA`
 }
 
 export const experiences: Experience[] = [
@@ -191,6 +192,7 @@ export const experiences: Experience[] = [
     category: "research",
     links: [
       { label: "AI in Special Education", url: "https://peer.asee.org/assistive-technologies-for-learning-disabilities-a-systematic-review-of-trends-and-impact", kind: "poster", venue: "ASEE-GSW Conference 2025" },
+      { label: "Human Pose Estimation research paper", url: "https://www.mdpi.com/2813-4648/4/3/28", kind: "paper", venue: "MDPI - JETA"}
     ],
   },
   { id: 4, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[4], category: "on-campus" },
@@ -209,14 +211,15 @@ export const experiences: Experience[] = [
     category: "research",
     links: [
       { label: "Use of Heatmap Representation for High Speed Event-based Vision", url: "https://uta.engineering/innovationday/posters/2026/poster-53.pdf", kind: "poster", venue: "Innovation Day 2026" },
-      { label: "AEDAT Stream Viewer (repo)", url: "https://github.com/aroudrasthakur/AEDAT_video_tool", kind: "code" },
+      { label: "AEDAT Stream Viewer (repo)", url: "https://github.com/aroudrasthakur/AEDAT_video_tool", kind: "code" }
     ],
   },
   { id: 6, title: "APSI Student Assistant", company: "Honor's College (UTA)", location: "Arlington, TX", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[6], category: "on-campus" },
   { id: 7, title: "ACM Create Member", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[7], category: "on-campus" },
   { id: 8, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[8], category: "industry" },
   { id: 9, title: "ACM Create Project Manager", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[9], category: "on-campus" },
-  { id: 10, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: null, description: "Incoming AI Intern @ HF Sinclair - June 2026", technologies: [], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[10], category: "industry" }
+  { id: 10, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: "2026-08", description: "AI Intern @ HF Sinclair", technologies: ["LangGraph", "Python", "LangChain", "Snowflake", "Cortex Services", "SQL", "DDL", "MLFlow"], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[10], category: "industry" },
+  { id: 11, title: "Director of Tech Team", company: "HackUTA", location: "Arlington, TX", startDate: "2026-08", endDate: null, description: "Director of Tech Team @ HackUTA", technologies: [], logoPath: "/logo/hackuta_logo.png", priority: 5, longDescription: experienceLongDescriptions[11], category: "on-campus" },
 ];
 
 export const projects: Project[] = [
@@ -254,24 +257,24 @@ export const newsLastUpdated = "2026-05-21";
 export const newsUpdates: NewsUpdate[] = [
   {
     id: 1,
-    date: "2026-05-21",
-    kicker: "Now Shipping",
-    headline: "Silo — Prompt Drift Detection Platform — Goes Live",
-    body: "Led a 7-engineer team to launch Silo, an LLM prompt evaluation platform with CI-gated drift detection. Now installable via `npm install silo-drift-cli`.",
+    date: "2026-08-05",
+    kicker: "Publication",
+    headline: "MDPI Publication Accepted!!",
+    body: "Co-authored 'Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications' in MDPI.",
   },
   {
     id: 2,
-    date: "2026-06-01",
-    kicker: "Incoming",
-    headline: "Joining HF Sinclair as AI Intern this June",
-    body: "Aroudra is headed to HF Sinclair in June 2026 to build production AI tooling",
+    date: "2026-08-14",
+    kicker: "Wrapped up!",
+    headline: "HF Sinclair internship wrapped up!",
+    body: "Built AI agents, traced their chaos, and somehow called it an internship.",
   },
   {
     id: 3,
-    date: "2026-04-15",
-    kicker: "Publication",
-    headline: "MDPI publication submitted and under review. Will they accept it??",
-    body: "Co-authored 'Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications' in MDPI.",
+    date: "2026-08-17",
+    kicker: "HackUTA8",
+    headline: "Joining HackUTA as the director of tech team!",
+    body: "From building at hackathons to building the hackathon itself.",
   },
 ];
 
