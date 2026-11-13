@@ -260,12 +260,6 @@ export const experiences: Experience[] = [
   { id: 11, title: "Director of Technology", company: "HackUTA", location: "Arlington, TX", startDate: "2026-07", endDate: "2026-11", description: "Led 5 engineers building HackUTA's application and event platform (React, TypeScript, Convex) with secure authentication, RBAC, audit logs, and CI/CD.", technologies: ["React", "TypeScript", "Convex", "Vite", "GitHub Actions"], logoPath: "/logo/hackuta_logo.png", priority: 5, longDescription: experienceLongDescriptions[11], category: "on-campus",
     links: [
       { label: "HackUTA 2026 website", url: "https://hackuta.com", kind: "link", venue: "hackuta.com" },
-      { label: "Applicant registration app", url: "https://register.hackuta.com", kind: "link", venue: "register.hackuta.com" },
-      { label: "Accepted-hacker portal", url: "https://hacker.hackuta.com", kind: "link", venue: "hacker.hackuta.com" },
-      { label: "hackuta-2026-repository (website)", url: "https://github.com/aroudrasthakur/hackuta-2026-repository", kind: "code", venue: "GitHub" },
-      { label: "hackuta-2026-register (applicant app)", url: "https://github.com/aroudrasthakur/hackuta-2026-register", kind: "code", venue: "GitHub" },
-      { label: "hackuta-2026-profile (participant portal)", url: "https://github.com/aroudrasthakur/hackuta-2026-profile", kind: "code", venue: "GitHub" },
-      { label: "hackuta-2026-admin (organizer app)", url: "https://github.com/aroudrasthakur/hackuta-2026-admin", kind: "code", venue: "GitHub" },
     ],
   },
 ];
