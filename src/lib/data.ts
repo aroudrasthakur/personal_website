@@ -98,11 +98,11 @@ export const experienceLongDescriptions: Record<number, string> = {
 
   3: `➤ Conducted research in Human Pose Estimation using advanced Computer Vision and Artificial Intelligence methodologies, focusing on deep learning architectures such as CNNs, GCNs, and Transformers.  
 
-➤ Published a peer-reviewed paper in MDPI - JETA titled “Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications,” presenting a rigorous analysis of state-of-the-art models, benchmark datasets, and neural architectures.  
+➤ Coauthored a peer-reviewed paper in MDPI - JETA (2026) titled “Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications,” presenting a rigorous analysis of state-of-the-art models, benchmark datasets, and neural architectures.  
 
 ➤ Collaborated on the development and evaluation of neural networks tailored for 2D and 3D pose estimation, improving spatial keypoint detection accuracy and inference efficiency.  
 
-➤ Presented a research poster at the ASEE GSW Conference, highlighting the integration of AI-driven vision systems in Special Education and assistive learning contexts.  
+➤ Authored (sole author) “Assistive Technologies for Learning Disabilities: A Systematic Review of Trends and Impact,” presented at the ASEE Gulf-Southwest Conference 2025.  
 
 ➤ Contributed to dataset preprocessing, model training, and comparative analysis of pose estimation pipelines using frameworks like TensorFlow, PyTorch, and OpenCV.  
 
@@ -117,7 +117,7 @@ Mathematics, reinforcing core programming, logic, and analytical concepts.
 
 ➤ Created problem sets, mock exams, and structured review materials that enhanced performance and boosted session attendance across multiple cohorts.`,
 
-  5: `➤ Conducting research in event-based computer vision and neuromorphic data analysis under Prof. Diego Patino, focusing on deep learning workflows built with Python, TensorFlow, PyTorch, and OpenCV.
+  5: `➤ Conducting research in event-based computer vision and neuromorphic data analysis under Prof. Diego Patiño, focusing on deep learning workflows built with Python, TensorFlow, PyTorch, and OpenCV.
   
 ➤ Collaborating with Ph.D. researchers to design a novel event data representation technique for machine learning pipelines, improving accuracy and efficiency across multiple event-vision benchmarks.  
 
@@ -177,8 +177,25 @@ Designed and integrated a scalable serverless backend using AWS Amplify, Cognito
 
 ➤ Designed CI/CD integration endpoints for automated prompt testing workflows, enabling seamless integration with developer pipelines and Git-based version control.`,
 
-  10: `➤ AI Intern @ HF Sinclair`,
-  11: `➤ Director of Tech Team @ HackUTA`
+  10: `➤ Built a multi-agent LLM workflow with Python, LangGraph, and Snowflake Cortex Search for an enterprise contract-analysis use case, covering document ingestion, semantic retrieval, tool design, routing, structured outputs, validation, and failure handling.
+
+➤ Created ObsFlow, a Snowflake-backed observability and evaluation framework that captures agent traces, tool calls, latency, citation provenance, response-quality signals, and failures for debugging and root-cause analysis.
+
+➤ Reduced token consumption by approximately 70% (20K to 6K tokens per request).
+
+➤ Contributed to an internal HR AI assistant using Snowflake Cortex Agents, Cortex Search, SQL, and dbt-backed organizational data; developed question routing, grounding, citation handling, and retrieval evaluation.
+
+➤ Traced a citation-generation failure to an incompatible Snowflake function implementation, corrected the execution path to restore source attribution, and presented results to engineers and business stakeholders through team reviews and demonstrations.`,
+
+  11: `➤ Led 5 engineers building HackUTA's website and participant application platform from scratch with React, TypeScript, Vite, and Convex, built to support 1,000+ applications; owned task assignment, architecture decisions, pull-request review, and deployments.
+
+➤ Implemented password and email-OTP authentication, role-based access control, server-side authorization restricting applicants to their own data, and audit logs for application-review decisions.
+
+➤ Hardened the platform with Content Security Policy, rate limits for authentication and uploads, shared Zod validation, input sanitization, and secure resume uploads (origin allowlists, PDF validation, single-use upload tokens).
+
+➤ Built asynchronous email queues with delivery-status tracking and service health endpoints, and managed domains, organizational email accounts, and SMTP configuration.
+
+➤ Established GitHub Actions CI/CD with Vitest, Playwright end-to-end tests, and 90% coverage gates.`
 }
 
 export const experiences: Experience[] = [
@@ -191,7 +208,7 @@ export const experiences: Experience[] = [
     startDate: "2024-08",
     endDate: "2025-08",
     description: "Researched ASL hand pose estimation using AI, implementing DTW and CNN-GCN models to enhance gesture recognition, robustness, and accessibility.",
-    technologies: ["JavaScript", "HTML/CSS", "Git"],
+    technologies: ["Python", "OpenCV", "MediaPipe", "PyTorch", "TensorFlow"],
     logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
     priority: 3,
     longDescription: experienceLongDescriptions[2],
@@ -205,18 +222,18 @@ export const experiences: Experience[] = [
     location: "Arlington, TX",
     startDate: "2024-10",
     endDate: "2025-10",
-    description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; published in IEEE Access; improved model accuracy and accessibility.",
-    technologies: ["Python", "JavaScript", "REST APIs"],
+    description: "Researched deep learning-based human pose estimation using CNNs, GCNs, and Transformers; coauthored a peer-reviewed survey in MDPI JETA and authored an ASEE-GSW paper on assistive technologies for students with learning disabilities.",
+    technologies: ["Python", "PyTorch", "TensorFlow", "OpenCV"],
     logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
     priority: 3,
     longDescription: experienceLongDescriptions[3],
     category: "research",
     links: [
-      { label: "AI in Special Education", url: "https://peer.asee.org/assistive-technologies-for-learning-disabilities-a-systematic-review-of-trends-and-impact", kind: "poster", venue: "ASEE-GSW Conference 2025" },
+      { label: "Assistive Technologies for Learning Disabilities: A Systematic Review of Trends and Impact", url: "https://peer.asee.org/assistive-technologies-for-learning-disabilities-a-systematic-review-of-trends-and-impact", kind: "paper", venue: "ASEE-GSW Conference 2025" },
       { label: "Human Pose Estimation research paper", url: "https://www.mdpi.com/2813-4648/4/3/28", kind: "paper", venue: "MDPI - JETA"}
     ],
   },
-  { id: 4, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["HTML", "CSS", "jQuery", "WordPress"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[4], category: "on-campus" },
+  { id: 4, title: "Supplemental Instruction Leader", company: "Academic Success Center (UTA)", location: "Arlington, TX", startDate: "2025-01", endDate: "2025-12", description: "Led peer instruction for Data Structures, Algorithms, and Discrete Math; created interactive activities, tutoring sessions, and review materials to boost comprehension.", technologies: ["Data Structures", "Algorithms", "Discrete Mathematics"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 2, longDescription: experienceLongDescriptions[4], category: "on-campus" },
   {
     id: 5,
     title: "Undergraduate Research Assistant",
@@ -224,7 +241,7 @@ export const experiences: Experience[] = [
     location: "Arlington, TX",
     startDate: "2025-05",
     endDate: null,
-    description: "Researched event-based computer vision using CNNs and ResNet models, improving event data representations and enabling real-time structural failure prediction systems.",
+    description: "Researching event-based computer vision with CNNs and ResNet models, developing improved event data representations with the goal of detecting visual precursors to structural failure.",
     technologies: ["Event Vision", "PyTorch"],
     logoPath: "/logo/university_of_texas_at_arlington_logo.jpg",
     priority: 4,
@@ -237,10 +254,10 @@ export const experiences: Experience[] = [
   },
   { id: 6, title: "APSI Student Assistant", company: "Honor's College (UTA)", location: "Arlington, TX", startDate: "2025-06", endDate: "2025-06", description: "Organized and managed a large-scale APSI campus event with 500+ attendees, coordinating logistics, teams, and operations to ensure seamless execution.", technologies: ["Communication"], logoPath: "/logo/university_of_texas_at_arlington_logo.jpg", priority: 1, longDescription: experienceLongDescriptions[6], category: "on-campus" },
   { id: 7, title: "ACM Create Member", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2025-09", endDate: "2025-12", description: "Serving as ACM Create Member, developing MavsPrep, a web platform that provides UTA students with organized study materials and academic resources.", technologies: ["NextJS"],logoPath: "/logo/acmuta_logo.jpg", priority: 3, longDescription: experienceLongDescriptions[7], category: "on-campus" },
-  { id: 8, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[8], category: "industry" },
-  { id: 9, title: "ACM Create Project Manager", company: "ACM (UTA)", location: "Arlington, TX", startDate: "2026-1", endDate: "2026-5", description: "Led a 7-person team to ship Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[9], category: "on-campus" },
-  { id: 10, title: "AI Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: "2026-08", description: "AI Intern @ HF Sinclair", technologies: ["LangGraph", "Python", "LangChain", "Snowflake", "Cortex Services", "SQL", "DDL", "MLFlow"], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[10], category: "industry" },
-  { id: 11, title: "Director of Tech Team", company: "HackUTA", location: "Arlington, TX", startDate: "2026-08", endDate: null, description: "Director of Tech Team @ HackUTA", technologies: [], logoPath: "/logo/hackuta_logo.png", priority: 5, longDescription: experienceLongDescriptions[11], category: "on-campus" },
+  { id: 8, title: "AI Engineer Intern", company: "Ozcorp Scientific LLC", location: "Guaynabo, PR", startDate: "2025-12", endDate: "2026-05", description: "Built and deployed an end-to-end AI Research Agent that automates entity resolution, retrieval, extraction, ranking, and reporting, reducing manual effort by 80%+, improving relevance by 30%, and cutting latency by 50% while enhancing accuracy and explainability.", technologies: ["Python", "FastAPI", "React", "LangChain", "NextJS", "AWS", "Docker", "Cursor"], logoPath: "/logo/ozcorp_scientific_logo.jpg", priority: 6, longDescription: experienceLongDescriptions[8], category: "industry" },
+  { id: 9, title: "ACM Create Project Manager", company: "ACM Create Committee (UTA)", location: "Arlington, TX", startDate: "2026-01", endDate: null, description: "Leading a 7-person team building Silo — an LLM prompt evaluation platform — through agile sprints, improving team efficiency by 40% and delivering CI/CD-integrated drift detection.", technologies: ["FastAPI", "PostgreSQL", "Next.js", "Python", "Agile"], logoPath: "/logo/acmuta_logo.jpg", priority: 4, longDescription: experienceLongDescriptions[9], category: "on-campus" },
+  { id: 10, title: "Artificial Intelligence Intern", company: "HF Sinclair", location: "Dallas, TX", startDate: "2026-06", endDate: "2026-08", description: "Built multi-agent LLM workflows with LangGraph and Snowflake Cortex, plus ObsFlow, an observability framework for agent traces and citation provenance; reduced token consumption by approximately 70%.", technologies: ["LangGraph", "Python", "LangChain", "Snowflake", "Cortex Services", "SQL", "DDL", "MLFlow"], logoPath: "/logo/sinclair_logo.jpg", priority: 5, longDescription: experienceLongDescriptions[10], category: "industry" },
+  { id: 11, title: "Director of Technology", company: "HackUTA", location: "Arlington, TX", startDate: "2026-07", endDate: "2026-11", description: "Led 5 engineers building HackUTA's application and event platform (React, TypeScript, Convex) with secure authentication, RBAC, audit logs, and CI/CD.", technologies: ["React", "TypeScript", "Convex", "Vite", "GitHub Actions"], logoPath: "/logo/hackuta_logo.png", priority: 5, longDescription: experienceLongDescriptions[11], category: "on-campus" },
 ];
 
 export const projects: Project[] = [
@@ -251,15 +268,16 @@ export const projects: Project[] = [
   { id: 5, title: "Store Management System", spotlightTag: "Inventory Management System", spotlightLabel: "BACKEND SYSTEM", spotlightDescription: "Database-backed platform for managing stores, vendors, stock records, and inventory operations.", spotlightBadge: "PHP + MySQL", description: "PHP + MySQL based web application for managing stores, vendors, and inventory. Features CRUD operations, stock tracking, and vendor management.", icon: "🏪", tags: ["PHP", "MySQL", "Apache", "CSS"], stars: 0, github: "https://github.com/aroudrasthakur/StoreManagementAndWebInterface", demo: null, website: null, priority: 8 },
   { id: 6, title: "ASL Similarity Measures", spotlightTag: "Gesture Recognition Research", spotlightLabel: "RESEARCH AREA", spotlightDescription: "Gesture analysis research using Dynamic Time Warping and sequence similarity for ASL motion patterns.", spotlightBadge: "Computer Vision", description: "Research project implementing Dynamic Time Warping (DTW) and similarity measures for American Sign Language recognition and gesture analysis.", icon: "🤖", tags: ["Python", "DTW", "Machine Learning", "Computer Vision"], stars: 0, github: "https://github.com/aroudrasthakur/Similarity-Measures", demo: null, website: null, priority: 7 },
   { id: 7, title: "Embedded Systems Projects", spotlightTag: "Embedded IoT Systems", spotlightLabel: "HARDWARE SYSTEMS", spotlightDescription: "C-based Raspberry Pi projects connecting sensors, alarms, distance measurement, and embedded logic.", spotlightBadge: "Embedded IoT", description: "Collection of C-based projects including HealthMart Pharmacy system, Virtual Chatbot, Alarm System, Sonar Range Finder, and Temperature Sensor on Raspberry Pi 4.", icon: "💻", tags: ["C", "Raspberry Pi", "Embedded Systems", "IoT"], stars: 0, github: "https://github.com/aroudrasthakur/Projects", demo: null, website: null, priority: 6 },
-  { id: 8, title: "Personal Portfolio Website", spotlightTag: "Interactive Portfolio Design", spotlightLabel: "DESIGN SYSTEM", spotlightDescription: "Personal portfolio experience built to present projects, research, and technical identity with polished UI.", spotlightBadge: "Frontend Craft", description: "Modern, interactive portfolio website showcasing experiences, projects, and skills with dynamic components and engaging UI elements.", icon: "🎨", tags: ["Next.js", "React", "JavaScript", "CSS"], stars: 0, github: "https://github.com/aroudrasthakur/personal_website", demo: null, website: null, priority: 5 },
+  { id: 8, title: "Personal Portfolio Website", spotlightTag: "Interactive Portfolio Design", spotlightLabel: "DESIGN SYSTEM", spotlightDescription: "Personal portfolio experience built to present projects, research, and technical identity with polished UI.", spotlightBadge: "Frontend Craft", description: "Modern, interactive portfolio built with Astro, React, GSAP, and Three.js, showcasing experience, projects, research, and skills with scroll animations and an interactive 3D hero.", icon: "🎨", tags: ["Astro", "React", "Tailwind CSS", "GSAP", "Three.js"], stars: 0, github: "https://github.com/aroudrasthakur/personal_website", demo: null, website: null, priority: 5 },
   { id: 9, title: "Horizon", spotlightTag: "Disaster Response Platform", spotlightLabel: "IMPACT PRODUCT", spotlightDescription: "Mobile emergency support platform combining disaster tracking, service discovery, and user profiles.", spotlightBadge: "Civic Tech", description: "Horizon is a comprehensive mobile application designed to provide critical support during natural disasters and emergencies. By combining real-time disaster tracking, emergency service location, and user profile management, Horizon empowers both individuals seeking assistance and emergency service providers.", icon: "🚨", tags: ["JavaScript", "TypeScript", "MongoDB", "Streamlit", "React-Native", "HTML", "CSS", "API"], stars: 0, github: "https://github.com/V-prajit/HackUTA6", demo: null, website: null, priority: 8 },
   { id: 10, title: "Slang Detection LLM", spotlightTag: "Slang-Aware NLP Model", spotlightLabel: "MODEL AREA", spotlightDescription: "NLP model focused on interpreting slang-heavy social text for more context-aware language understanding.", spotlightBadge: "NLP Model", description: "A language model fine-tuned to detect and interpret slang terms in social media text, enhancing sentiment analysis accuracy.", icon: "🗣️", tags: ["Python", "TensorFlow", "NLP", "Machine Learning"], stars: 0, github: "https://github.com/aroudrasthakur/SlangDetectionLLM", demo: null, website: null, priority: 7 },
   { id: 11, title: "Steering Wheel Angle Prediction", spotlightTag: "Autonomous Driving Vision", spotlightLabel: "VISION MODEL", spotlightDescription: "Computer vision model that maps road imagery to steering angle predictions for driving intelligence.", spotlightBadge: "Autonomous AI", description: "Developed a deep learning model to predict steering wheel angles from road images using CNNs, enhancing autonomous driving capabilities.", icon: "🚗", tags: ["Python", "Keras", "Computer Vision", "Deep Learning"], stars: 0, github: "", demo: "https://youtu.be/5VmE4qFt2L8", website: null, priority: 10 },
   { id: 12, title: "Bod-Fix", spotlightTag: "Pose-Based Fitness Coaching", spotlightLabel: "APPLIED AI", spotlightDescription: "Pose-estimation fitness tool that analyzes movement and helps users improve exercise form.", spotlightBadge: "Human Pose", description: "A fitness application that provides the user with a form correction tool to allow the users to perform exercises with the correct form using pose estimation techniques.", icon: "🏋️‍♂️", tags: ["Python", "OpenCV", "Mediapipe", "Flask"], stars: 0, github: "", demo: null, website: null, priority: 8 },
   { id: 13, title: "AEDAT Stream Viewer", spotlightTag: "Event Camera Visualization", spotlightLabel: "RESEARCH TOOL", spotlightDescription: "Low-latency visualization tool for synchronized event-camera streams and RGB frame playback.", spotlightBadge: "Event Vision", description: "Web app for side-by-side visualization of AEDAT4 event streams and RGB frames. Backend (FastAPI) parses AEDAT files, serves synchronized event windows and frames; frontend (vanilla JS + canvas) renders low-latency event visualization with playback and scrub controls.", icon: "📹", tags: ["Python", "FastAPI", "JavaScript", "AEDAT", "Visualization"], stars: 0, github: "https://github.com/aroudrasthakur/AEDAT_video_tool", demo: null, website: null, priority: 11 },
-  { id: 14, title: "Slackbot", spotlightTag: "LLM Ticket Automation", spotlightLabel: "LLM WORKFLOW", spotlightDescription: "Slack automation system that classifies messages, retrieves context, and turns conversations into live tickets.", spotlightBadge: "AI Automation", description: "Built a production-grade Slackbot and realtime Next.js dashboard for Forward-Deployed Engineers that classifies Slack messages with OpenAI and groups them into actionable tickets using vector similarity and strict guardrails. Designed for reliability and scale with sequential message processing, cross-channel context retrieval, and live ticket updates via Socket.IO.", icon: "🏢", tags: ["Slackbot", "Realtime Systems", "LLMs", "Semantic Search", "Next.js", "Node.js", "Socket.IO"], stars: 0, github: "https://github.com/aroudrasthakur/nixo-slackbot", demo: "https://youtu.be/Pks6yqSAxU8", embedYouTubeDemo: true, website: null, priority: 13 },
-  { id: 15, title: "Cicada AML", spotlightTag: "Graph-Based AML Analytics", spotlightLabel: "INVESTIGATION AI", spotlightDescription: "Graph analytics platform that scores blockchain wallets, explains risky flows, and supports AML investigations.", spotlightBadge: "Risk Intelligence", description: "Built Cicada AML, a full-stack blockchain anti-money-laundering investigation platform that ingests transaction CSVs, builds wallet graphs, runs 185 heuristics and five ML risk lenses, and surfaces suspicious wallets, clusters, flow explanations, reports, and SAR exports in an investigator-ready dashboard.", icon: "🕵️", tags: ["AML", "Blockchain", "FastAPI", "React", "Machine Learning", "Graph Analytics", "Supabase", "Risk Scoring"], stars: 0, github: "https://github.com/aroudrasthakur/Cicada-AML", demo: null, website: null, priority: 14 },
+  { id: 14, title: "Slackbot", spotlightTag: "LLM Ticket Automation", spotlightLabel: "LLM WORKFLOW", spotlightDescription: "Slack automation system that classifies messages, retrieves context, and turns conversations into live tickets.", spotlightBadge: "AI Automation", description: "Built a Slackbot and realtime Next.js dashboard for Forward-Deployed Engineers that classifies Slack messages with OpenAI and groups them into actionable tickets using vector similarity and strict guardrails. Designed for reliability and scale with sequential message processing, cross-channel context retrieval, and live ticket updates via Socket.IO.", icon: "🏢", tags: ["Slackbot", "Realtime Systems", "LLMs", "Semantic Search", "Next.js", "Node.js", "Socket.IO"], stars: 0, github: "https://github.com/aroudrasthakur/nixo-slackbot", demo: "https://youtu.be/Pks6yqSAxU8", embedYouTubeDemo: true, website: null, priority: 13 },
+  { id: 15, title: "Cicada AML", spotlightTag: "Graph-Based Risk Analysis", spotlightLabel: "INVESTIGATION AI", spotlightDescription: "ML risk-analysis app that scores blockchain wallets, explains risky flows, and supports AML investigations.", spotlightBadge: "Risk Intelligence", description: "Built Cicada AML, an ML risk-analysis application for blockchain transactions that ingests transaction CSVs, builds wallet graphs, runs 185 heuristics and five ML risk lenses trained on the Elliptic Bitcoin dataset, and surfaces suspicious wallets, clusters, flow explanations, reports, and SAR exports in an investigator-style dashboard.", icon: "🕵️", tags: ["AML", "Blockchain", "FastAPI", "React", "Machine Learning", "Graph Analytics", "Supabase", "Risk Scoring"], stars: 0, github: "https://github.com/aroudrasthakur/Cicada-AML", demo: null, website: null, priority: 14 },
   { id: 16, title: "Silo", spotlightTag: "AI Evaluation Pipelines", spotlightLabel: "FOCUS AREA", spotlightDescription: "Systems for testing, validating, and monitoring AI behavior before it reaches production.", spotlightBadge: "AI Systems", description: "Built Silo, a production-ready prompt testing platform that detects prompt drift, compares baseline vs. candidate versions, runs staged evaluations over stored test cases, and gates deployments with CI-ready pass/fail signals, diagnostics, human review, and optimization telemetry.\n\nTry it out:\n`npm install silo-drift-cli`", icon: "🧪", tags: ["Prompt Testing", "LLM Guardrails", "Vector Search", "Automation", "LLMOps", "FastAPI", "Next.js", "Supabase", "CI/CD"], stars: 5, github: "https://github.com/acmuta/Silo", demo: "https://youtu.be/UvGiuThrQqw", website: "https://silo-frontend.onrender.com/", embedYouTubeDemo: true, priority: 15 },
+  { id: 17, title: "AutoResume", spotlightTag: "AI Resume Generation", spotlightLabel: "AI PRODUCT", spotlightDescription: "Matches a career profile to job descriptions with vector search and renders tailored LaTeX resumes.", spotlightBadge: "Applied AI", description: "AI-powered resume generation platform that matches a structured career profile to job descriptions with pgvector semantic search, optimizes content with GPT-based models, and renders deterministic LaTeX PDFs. Includes AWS Cognito authentication, AES-256-GCM encryption of sensitive user data, and asynchronous Celery/Redis document workflows.", icon: "📄", tags: ["Next.js", "FastAPI", "pgvector", "Celery", "Redis", "AWS Cognito", "LaTeX"], stars: 0, github: "https://github.com/aroudrasthakur/auto_resume", demo: null, website: null, priority: 12 },
   ];
 
 export const publications: Publication[] = [
@@ -269,7 +287,7 @@ export const publications: Publication[] = [
       'Human Pose Estimation in 2D and 3D: A Survey of Analytical Methods, Benchmarking Frameworks, and Engineering Applications',
     label: 'Peer-reviewed paper',
     description:
-      'Survey analyzing state-of-the-art 2D/3D pose estimation models, benchmarking frameworks, and engineering applications for accessible AI systems.',
+      'Coauthored survey analyzing state-of-the-art 2D/3D pose estimation models, benchmarking frameworks, and engineering applications for accessible AI systems.',
     kind: 'paper',
     venue: 'MDPI — Journal of Experimental and Theoretical Analyses (JETA)',
     date: '2026-08',
@@ -278,11 +296,11 @@ export const publications: Publication[] = [
   },
   {
     id: 2,
-    title: 'AI in Special Education',
-    label: 'Conference poster',
+    title: 'Assistive Technologies for Learning Disabilities: A Systematic Review of Trends and Impact',
+    label: 'Conference paper',
     description:
-      'Presented research on AI-driven vision systems for Special Education and assistive learning contexts at the ASEE Gulf-Southwest conference.',
-    kind: 'poster',
+      'Sole-author systematic review of assistive technologies for students with learning disabilities, presented at the ASEE Gulf-Southwest conference.',
+    kind: 'paper',
     venue: 'ASEE-GSW Conference 2025',
     date: '2025-03',
     links: [
@@ -305,7 +323,7 @@ export interface NewsUpdate {
 }
 
 /** Shown in the newspaper masthead as the last-updated date. */
-export const newsLastUpdated = "2026-05-21";
+export const newsLastUpdated = "2026-11-13";
 
 /** Newest first. Add new entries with the date you want shown on the headline. */
 export const newsUpdates: NewsUpdate[] = [
